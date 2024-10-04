@@ -1,0 +1,13 @@
+*.bak
+*.kicad_pcb-bak
+*.sch-bak
+.DS_Store
+
+# include the zip of the gerbers directorys but not the gerber files.  They will all
+# be generated change at the same time, so there is no point in tracking individual files.
+!*-gerbers.zip
+*-gerbers/
+
+# exclude local working directories
+scratch/
+archive/

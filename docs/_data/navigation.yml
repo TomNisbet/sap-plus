@@ -1,0 +1,10 @@
+# main links
+docs:
+  - title: "Introduction"
+    children:
+      - title: "What is SAP-Plus?"
+        url: /
+  - title: "Links"
+    children:
+      - title: "Code and Schematics"
+        url: "https://github.com/TomNisbet/sap-plus"
