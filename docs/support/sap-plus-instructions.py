@@ -107,7 +107,7 @@ area stores the instructions and instruction arguments.  The data area is used f
 storage with the Load, Store, and arithmetic operations.
 
 The stack pointer must be initialized before the stack is used.  This can be done using LAI to load a value
-into A and TAS to move it to the SP.  Because the stack growns downward, it is recomended that the SP be
+into A and TAS to move it to the SP.  Because the stack grows downward, it is recomended that the SP be
 initialized to the value 255 so it can use the top section of the data memory.  General data storage can
 then start at zero and grow upward.
 """
