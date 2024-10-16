@@ -4,6 +4,12 @@ docs:
     children:
       - title: "What is SAP-Plus?"
         url: /
+  - title: "Instruction Set"
+    children:
+      - title: "Instruction Summary"
+        url: /docs/in-summary/
+      - title: "Instruction Details"
+        url: /docs/in-details/
   - title: "Links"
     children:
       - title: "Code and Schematics"
