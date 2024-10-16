@@ -160,7 +160,7 @@ def makeInstructionDetails(filename):
             f.write('## ' + gi.name + '\n\n')
             f.write(gi.description + '\n\n')
             f.write(gi.text + '\n\n')
-            f.write('**Carry Flag:** ' + gi.carry + '\n')
+            f.write('**Carry Flag:** ' + gi.carry + '\n\n')
             f.write('**Zero Flag:** ' + gi.zero + '\n\n')
             f.write('|Name|Opcode|Bytes|Cycles|\n')
             f.write(':--- |:---: |:---:|:---: |\n')
