@@ -1,0 +1,412 @@
+---
+title: "SAP-Plus Instructions"
+permalink: /docs/in-details/
+excerpt: "Instruction set for the SAP-Plus Computer"
+---
+
+|           |           |           |           |           |           |           |           |
+|:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |
+|[ACI](#aci)|[ACM](#acm)|[ADI](#adi)|[ADM](#adm)|[ASL](#asl)|[CLC](#clc)|[CPI](#cpi)|[CPM](#cpm)|
+|[DCA](#dca)|[INA](#ina)|[JC](#jc)|[JMP](#jmp)|[JNC](#jnc)|[JNZ](#jnz)|[JSR](#jsr)|[JZ](#jz)|
+|[LAI](#lai)|[LAM](#lam)|[NOP](#nop)|[NOT](#not)|[OUT](#out)|[PHA](#pha)|[PLA](#pla)|[RTS](#rts)|
+|[SAM](#sam)|[SBI](#sbi)|[SBM](#sbm)|[SCI](#sci)|[SCM](#scm)|[SEC](#sec)|[TAS](#tas)|[TSA](#tsa)|
+|[TST](#tst)|
+
+## ACI
+
+add immediate to A with carry
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|ACI|0x24|2||
+
+## ACM
+
+add memory to A with carry
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|ACM|0x25|2||
+
+## ADI
+
+add  immediate to A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|ADI|0x20|2||
+
+## ADM
+
+add memory to A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|ADM|0x21|2||
+
+## ASL
+
+arithmetic shift left A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|ASL|0x0a|1|4|
+
+## CLC
+
+clear carry flag
+
+Clear carry flag.  Zero flag is set.
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|CLC|0x0c|1|3|
+
+## CPI
+
+compare immediate to A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|CPI|0x28|2||
+
+## CPM
+
+compare memory to A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|CPM|0x29|2||
+
+## DCA
+
+decrement A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|DCA|0x08|1|4|
+
+## INA
+
+increment A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|INA|0x07|1|4|
+
+## JC
+
+jump on Carry
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|JC|0x11|2|4|
+
+## JMP
+
+jump unconditional
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|JMP|0x10|2|4|
+
+## JNC
+
+jump on no Carry
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|JNC|0x13|2|4|
+
+## JNZ
+
+jump on no Zero
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|JNZ|0x14|2|4|
+
+## JSR
+
+jump to subroutine
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|JSR|0x17|2|7|
+
+## JZ
+
+jump on Zero
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|JZ|0x12|2|4|
+
+## LAI
+
+load A immediate
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|LAI|0x02|2|4|
+
+## LAM
+
+load A from memory
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|LAM|0x03|2|5|
+
+## NOP
+
+no operation
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|NOP|0x00|1|3|
+
+## NOT
+
+NOT A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|NOT|0x09|1|4|
+
+## OUT
+
+output A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|OUT|0x01|1|3|
+
+## PHA
+
+push A
+
+Push processor status (flags) on to the stack.  SP is decremented.
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|PHA|0x15|1|4|
+
+## PLA
+
+pull A
+
+Pull accumulator from the stack.  SP is incremented.
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|PLA|0x16|1|5|
+
+## RTS
+
+return from subroutine
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|RTS|0x18|1|5|
+
+## SAM
+
+store A to memory
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|SAM|0x04|2|5|
+
+## SBI
+
+subtract immediate from A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|SBI|0x22|2||
+
+## SBM
+
+subtract memory from A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|SBM|0x23|2||
+
+## SCI
+
+subtract immediate from A with borrow
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|SCI|0x26|2||
+
+## SCM
+
+subtract memory from A with borrow
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|SCM|0x27|2||
+
+## SEC
+
+set carry flag
+
+Set carry flag. Zero flag is cleared.
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|SEC|0x0d|1|3|
+
+## TAS
+
+transfer A to SP
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|TAS|0x05|1|3|
+
+## TSA
+
+transfer SP to A
+
+
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|TSA|0x06|1|3|
+
+## TST
+
+test A
+
+Test A for sign and zero.  Carry flag becomes a minus flag (A<0) and zero flag indicates A=0.
+
+**Flags:** XXX
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|TST|0x0b|1|4|
+
+
+*this file was generated by sap-plus-instructions.py at 16-Oct-2024 13:48:46*
