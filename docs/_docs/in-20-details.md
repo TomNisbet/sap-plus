@@ -4,6 +4,21 @@ permalink: /docs/in-details/
 excerpt: "Instruction set for the SAP-Plus Computer"
 ---
 
+## SAP-Plus Instructions
+
+The SAP-Plus has a single user-accessable register A that functions as the accumulator for ALU operations.
+If no stack operations are needed, then the SP can also be used as a general purpose register.
+
+The memory features two 256 byte areas that are addressed by the Memory Address Register.  The Program Memory
+area stores the instructions and instruction arguments.  The data area is used for the stack and for data
+storage with the Load, Store, and arithmetic operations.
+
+The stack pointer must be initialized before the stack is used.  This can be done using LAI to load a value
+into A and TAS to move it to the SP.  Because the stack growns downward, it is recomended that the SP be
+initialized to the value 255 so it can use the top section of the data memory.  General data storage can
+then start at zero and grow upward.
+
+
 |           |           |           |           |           |           |           |           |
 |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |
 |[ACI](#aci)|[ACM](#acm)|[ADI](#adi)|[ADM](#adm)|[ASL](#asl)|[CLC](#clc)|[CPI](#cpi)|[CPM](#cpm)|
@@ -16,9 +31,10 @@ excerpt: "Instruction set for the SAP-Plus Computer"
 
 add immediate to A with carry
 
+Add A to immediate value and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A overflows
+**Zero Flag:** set if zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -28,9 +44,10 @@ add immediate to A with carry
 
 add memory to A with carry
 
+Add A to value in data memory at the address argument and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A overflows
+**Zero Flag:** set if zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -40,9 +57,10 @@ add memory to A with carry
 
 add  immediate to A
 
+Add A to immediate value and store the result in A.  The Carry flag value is not used in the addition.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A overflows
+**Zero Flag:** set if zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -52,9 +70,10 @@ add  immediate to A
 
 add memory to A
 
+Add A to value  in data memory at the address argument and store the result in A.  The Carry flag value is not used in the addition.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A overflows
+**Zero Flag:** set if zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -64,9 +83,10 @@ add memory to A
 
 arithmetic shift left A
 
+Shift A one position left.  Least significant bit of A takes the value of the Carry flag and the Carry Flag is set with the most significant bit of A.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A overflows
+**Zero Flag:** set if zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -78,7 +98,8 @@ clear carry flag
 
 Clear carry flag.  Zero flag is set.
 
-**Flags:** XXX
+**Carry Flag:** clear
+**Zero Flag:** set
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -88,9 +109,10 @@ Clear carry flag.  Zero flag is set.
 
 compare immediate to A
 
+Compare A to immediate value in the next byte of program memory.  Carry flag is set if A<value and Zero flag is set if A=value.  The value of A is not changed.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A < value
+**Zero Flag:** set if equal
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -100,9 +122,10 @@ compare immediate to A
 
 compare memory to A
 
+Compare A to the value in data memory addressed by  the next byte of program memory.  Carry flag is set if A<value and Zero flag is set if A=value.  The value of A is not changed.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A < value
+**Zero Flag:** set if equal
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -112,9 +135,10 @@ compare memory to A
 
 decrement A
 
+Decrement A.
 
-
-**Flags:** XXX
+**Carry Flag:** set if wrap past zero
+**Zero Flag:** set if wrap to zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -124,9 +148,10 @@ decrement A
 
 increment A
 
+Increment A.
 
-
-**Flags:** XXX
+**Carry Flag:** set if wrap to zero
+**Zero Flag:** set if wrap to zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -136,9 +161,10 @@ increment A
 
 jump on Carry
 
+Jump to address argument if Carry flag set
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -148,9 +174,10 @@ jump on Carry
 
 jump unconditional
 
+Jump to address argument
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -160,9 +187,10 @@ jump unconditional
 
 jump on no Carry
 
+Jump to address argument if Carry flag clear
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -172,9 +200,10 @@ jump on no Carry
 
 jump on no Zero
 
+Jump to address argument if Zero  flag clear
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -184,9 +213,10 @@ jump on no Zero
 
 jump to subroutine
 
+Jump to subroutine at address argument.  PC is stored on the stack and SP is decremented.
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -196,9 +226,10 @@ jump to subroutine
 
 jump on Zero
 
+Jump to address argument if Zero  flag set
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -208,9 +239,10 @@ jump on Zero
 
 load A immediate
 
+Load A with immediate value stored in the next byte in program memory.
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -220,9 +252,10 @@ load A immediate
 
 load A from memory
 
+Load A with the value from memory address specified by the next byte in program memory.
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -232,9 +265,10 @@ load A from memory
 
 no operation
 
+No operation is performed.  Data registers and flags are unchanged.
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -244,9 +278,10 @@ no operation
 
 NOT A
 
+Replace A with the logical NOT of A, meaning that all zero bits become one and all one bits become zero.
 
-
-**Flags:** XXX
+**Carry Flag:** undetermined
+**Zero Flag:** set if zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -256,9 +291,10 @@ NOT A
 
 output A
 
+Store A in the Output Register for display.
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -270,7 +306,8 @@ push A
 
 Push processor status (flags) on to the stack.  SP is decremented.
 
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -282,7 +319,8 @@ pull A
 
 Pull accumulator from the stack.  SP is incremented.
 
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -292,9 +330,10 @@ Pull accumulator from the stack.  SP is incremented.
 
 return from subroutine
 
+Return from subroutine.  PC is pulled from the stack and SP is incremented.
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -304,9 +343,10 @@ return from subroutine
 
 store A to memory
 
+Store A to memory at the address specified by the next byte in program memory.
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -316,9 +356,10 @@ store A to memory
 
 subtract immediate from A
 
+Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A underflows
+**Zero Flag:** set if zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -328,9 +369,10 @@ subtract immediate from A
 
 subtract memory from A
 
+Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the addition.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A underflows
+**Zero Flag:** set if zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -340,9 +382,10 @@ subtract memory from A
 
 subtract immediate from A with borrow
 
+Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A underflows
+**Zero Flag:** set if zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -352,9 +395,10 @@ subtract immediate from A with borrow
 
 subtract memory from A with borrow
 
+Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the addition.
 
-
-**Flags:** XXX
+**Carry Flag:** set if A underflows
+**Zero Flag:** set if zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -366,7 +410,8 @@ set carry flag
 
 Set carry flag. Zero flag is cleared.
 
-**Flags:** XXX
+**Carry Flag:** set
+**Zero Flag:** clear
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -376,9 +421,10 @@ Set carry flag. Zero flag is cleared.
 
 transfer A to SP
 
+Transfer A to the SP register.  A is unchanged.
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -388,9 +434,10 @@ transfer A to SP
 
 transfer SP to A
 
+Transfer the value of the SP register to A.  SP is unchanged.
 
-
-**Flags:** XXX
+**Carry Flag:** 
+**Zero Flag:** 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -402,11 +449,12 @@ test A
 
 Test A for sign and zero.  Carry flag becomes a minus flag (A<0) and zero flag indicates A=0.
 
-**Flags:** XXX
+**Carry Flag:** set if A is negative
+**Zero Flag:** set if A is zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
 |TST|0x0b|1|4|
 
 
-*this file was generated by sap-plus-instructions.py at 16-Oct-2024 13:48:46*
+*this file was generated by sap-plus-instructions.py at 16-Oct-2024 15:59:13*

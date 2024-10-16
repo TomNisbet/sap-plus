@@ -97,18 +97,35 @@ def makeOpcodes(filename):
         f.write('};\n')
 
 
-summaryHeader = """## SAP-Plus Instructions
+detailHeader = """## SAP-Plus Instructions
 
-The SAP-Plus has a simple instruction set.
+The SAP-Plus has a single user-accessable register A that functions as the accumulator for ALU operations.
+If no stack operations are needed, then the SP can also be used as a general purpose register.
+
+The memory features two 256 byte areas that are addressed by the Memory Address Register.  The Program Memory
+area stores the instructions and instruction arguments.  The data area is used for the stack and for data
+storage with the Load, Store, and arithmetic operations.
+
+The stack pointer must be initialized before the stack is used.  This can be done using LAI to load a value
+into A and TAS to move it to the SP.  Because the stack growns downward, it is recomended that the SP be
+initialized to the value 255 so it can use the top section of the data memory.  General data storage can
+then start at zero and grow upward.
 """
 
 def makeInstructionSummaries(filename):
     print("writing", filename)
 
     with open(filename, 'w') as f:
-        writeFileHeader(f, 'SAP-Plus Instructions', 'in-summary','Instruction set summary for the SAP-Plus Computer')
-        f.write(summaryHeader)
-        f.write('\n## Instructions\n\n')
+        writeFileHeader(f, 'SAP-Plus Instructions', 'in-summary','Instruction set summaries for the SAP-Plus Computer')
+        f.write('\n## Instructions by Name\n\n')
+        f.write('|' + '|'.join(['Name', 'Opcode', 'Description']) + '|\n')
+        f.write('|' + '|'.join([':---', ':---', ':---']) + '|\n')
+        for name in sorted(instructions):
+            gi = instructions[name]
+            f.write('|' + '|'.join([detailsLink(gi.name), gi.opcode, gi.description]) + '|\n')
+        f.write('\n')
+
+        f.write('\n## Instructions by Opcode\n\n')
         f.write('|' + '|'.join(['Opcode', 'Name', 'Description']) + '|\n')
         f.write('|' + '|'.join([':---', ':---', ':---']) + '|\n')
         for name in sorted(opcodes):
@@ -121,6 +138,8 @@ def makeInstructionDetails(filename):
     print("writing", filename)
     with open(filename, 'w') as f:
         writeFileHeader(f, 'SAP-Plus Instructions', 'in-details','Instruction set for the SAP-Plus Computer')
+        f.write(detailHeader)
+        f.write('\n\n')
 
         # Write a table of links to the instructions
         n = 0
@@ -141,7 +160,8 @@ def makeInstructionDetails(filename):
             f.write('## ' + gi.name + '\n\n')
             f.write(gi.description + '\n\n')
             f.write(gi.text + '\n\n')
-            f.write('**Flags:** ' + 'XXX' + '\n\n')
+            f.write('**Carry Flag:** ' + gi.carry + '\n')
+            f.write('**Zero Flag:** ' + gi.zero + '\n\n')
             f.write('|Name|Opcode|Bytes|Cycles|\n')
             f.write(':--- |:---: |:---:|:---: |\n')
             f.write("|{}|{}|{}|{}|\n".format(gi.name, gi.opcode, gi.bytes, gi.cycles))
