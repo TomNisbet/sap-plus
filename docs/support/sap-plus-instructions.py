@@ -76,7 +76,7 @@ def makeEnums(filename):
         for opcode in sorted(opcodes):
             si = opcodes[opcode]
             comment = '  ' + si.description
-            f.write("    {} = {},  // {}\n".format(si.name, opcode, comment))
+            f.write("    N_{} = {},  // {}\n".format(si.name, opcode, comment))
         f.write('};\n')
 
 def makeOpcodes(filename):

@@ -11,3 +11,6 @@
 # exclude local working directories
 scratch/
 archive/
+
+# exclude soft link to images that helps the editor preview
+/assets

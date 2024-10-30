@@ -4,6 +4,12 @@ docs:
     children:
       - title: "What is SAP-Plus?"
         url: /
+  - title: "Design"
+    children:
+      - title: "Backplane"
+        url: /docs/backplane/
+      - title: "Loader/Debugger"
+        url: /docs/loader/
   - title: "Instruction Set"
     children:
       - title: "Instruction Summary"
