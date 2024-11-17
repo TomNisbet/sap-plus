@@ -30,7 +30,7 @@ Backplane boards have additional 40-pin bus connectors along the top and bottom 
 
 ## Backplane module interconnects
 
-A pair of 2x8 pin header is provided between each board to make module-to-module connections.  A module board can use both sets of connectors for a total of 32 pins. Rather than being connected left-to-left and right-to-right, the interconnects have the inner pins connected and the outer pins connected.  A module needing 8 or fewer connections could populate just a 1x8 connector instead of a 2x8 to save space.
+A pair of 2x8 pin headers is provided between each board to make module-to-module connections.  A module board can use both sets of connectors for a total of 32 pins. Rather than being connected left-to-left and right-to-right, the interconnects have the inner pins connected and the outer pins connected.  A module needing 8 or fewer connections could populate just a 1x8 connector instead of a 2x8 to save space.
 
 [![Backplane with modules](../../assets/images/backplanes-with-modules.jpg "backplane with module boards")](../../assets/images/backplanes-with-modules.jpg)
 
@@ -45,7 +45,7 @@ There are no module-specific interconnects vertically, so related boards must sh
 
 The Bus Connector boards connect Backplane boards together to expand the computernvertically. Three connectors are used between each pair of backplane boards.  The bus connectors wire all 40 lines top-to-bottom.
 
-### Data LEDs and termination
+## Data LEDs and termination
 
 A second version of the Bus Connector boards has space to populate 8 LEDs to show values on the data bus. 
 
@@ -54,3 +54,24 @@ With the board flipped and the pin headers installed on the other side, the LEDs
 Unlike the backplane and generic bus connector boards, the LED boards assume that eight specific pins on the 40-pin connector are connected to the data bus, so they are specific to the SAP-Plus design.
 
 Note that an LED board with no LEDs or resistors installed will still function as a bus connector. There is no reason that the dedicated bus connector boards are needed other than aesthetics.
+
+## 40-pin bus signals
+
+The only pins that are defined by the generic backplane and bus connector boards are the ground and power pin pairs on pins 1 and 2 and pins 39 and 40.  The remaining 36 pins can be used for any purpose.  
+
+To use the Data LEDs and Termination Board, the 8 Data Bus signals must be on pins 4..11 with the MSB on pin 4.
+
+|Pin|Name|Description|
+|:---|:---|:---|
+|1|GND|Ground|
+|2|+5V|+5V power|
+|4|D7|Data Bus D7|
+|5|D6|Data Bus D6|
+|6|D5|Data Bus D5|
+|7|D4|Data Bus D4|
+|8|D3|Data Bus D3|
+|9|D2|Data Bus D2|
+|10|D1|Data Bus D1|
+|11|D0|Data Bus D0|
+|39|GND|Ground|
+|40|+5V|+5V Power|

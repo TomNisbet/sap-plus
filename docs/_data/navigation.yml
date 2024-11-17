@@ -10,6 +10,8 @@ docs:
         url: /docs/backplane/
       - title: "Loader/Debugger"
         url: /docs/loader/
+      - title: "Bus Signals"
+        url: /docs/bus-signals/
   - title: "Instruction Set"
     children:
       - title: "Instruction Summary"
