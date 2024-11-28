@@ -11,8 +11,8 @@ DCA,0x08,decrement A,1,4,set if wrap past zero,set if wrap to zero,Decrement A.
 NOT,0x09,NOT A,1,4,undetermined,set if zero,"Replace A with the logical NOT of A, meaning that all zero bits become one and all one bits become zero."
 ASL,0x0a,arithmetic shift left A,1,4,set if A overflows,set if zero,Shift A one position left.  Least significant bit of A takes the value of the Carry flag and the Carry Flag is set with the most significant bit of A.
 TST,0x0b,test A,1,4,set if A is negative,set if A is zero,Test A for sign and zero.  Carry flag becomes a minus flag (A<0) and zero flag indicates A=0.
-CLC,0x0c,clear carry flag,1,3,clear,set,Clear carry flag.  Zero flag is set.
-SEC,0x0d,set carry flag,1,3,set,clear,Set carry flag. Zero flag is cleared.
+CLF,0x0c,clear carry and zero flags,1,3,clear,set,Clear carry flag.  Zero flag is set.
+SEF,0x0d,set carry and zero flags,1,3,set,clear,Set carry flag. Zero flag is cleared.
 JMP,0x10,jump unconditional,2,4,,,Jump to address argument
 JC,0x11,jump on Carry,2,4,,,Jump to address argument if Carry flag set
 JZ,0x12,jump on Zero,2,4,,,Jump to address argument if Zero  flag set
@@ -22,13 +22,17 @@ PHA,0x15,push A,1,4,,,Push processor status (flags) on to the stack.  SP is decr
 PLA,0x16,pull A,1,5,,,Pull accumulator from the stack.  SP is incremented.
 JSR,0x17,jump to subroutine,2,7,,,Jump to subroutine at address argument.  PC is stored on the stack and SP is decremented.
 RTS,0x18,return from subroutine,1,5,,,Return from subroutine.  PC is pulled from the stack and SP is incremented.
-ADI,0x20,add  immediate to A,2,,set if A overflows,set if zero,Add A to immediate value and store the result in A.  The Carry flag value is not used in the addition.
-ADM,0x21,add memory to A,2,,set if A overflows,set if zero,Add A to value  in data memory at the address argument and store the result in A.  The Carry flag value is not used in the addition.
-SBI,0x22,subtract immediate from A,2,,set if A underflows,set if zero,Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
-SBM,0x23,subtract memory from A,2,,set if A underflows,set if zero,Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the addition.
-ACI,0x24,add immediate to A with carry,2,,set if A overflows,set if zero,"Add A to immediate value and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1."
-ACM,0x25,add memory to A with carry,2,,set if A overflows,set if zero,"Add A to value in data memory at the address argument and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1."
-SCI,0x26,subtract immediate from A with borrow,2,,set if A underflows,set if zero,Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
-SCM,0x27,subtract memory from A with borrow,2,,set if A underflows,set if zero,Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the addition.
-CPI,0x28,compare immediate to A,2,,set if A < value,set if equal,Compare A to immediate value in the next byte of program memory.  Carry flag is set if A<value and Zero flag is set if A=value.  The value of A is not changed.
-CPM,0x29,compare memory to A,2,,set if A < value,set if equal,Compare A to the value in data memory addressed by  the next byte of program memory.  Carry flag is set if A<value and Zero flag is set if A=value.  The value of A is not changed.
+RC,0x19,return if carry,1,5,,,Return from subroutine if Carry flag is set else no operation.
+RZ,0x1a,return if zero,1,5,,,Return from subroutine if Zero flag is set else no operation.
+RNC,0x1b,return if not carry,1,5,,,Return from subroutine if Carry flag is not set else no operation.
+RNZ,0x1c,return if not zero,1,5,,,Return from subroutine if Zero flag is not set else no operation.
+ADI,0x20,add  immediate to A,2,5,set if A overflows,set if zero,Add A to immediate value and store the result in A.  The Carry flag value is not used in the addition.
+ADM,0x21,add memory to A,2,6,set if A overflows,set if zero,Add A to value  in data memory at the address argument and store the result in A.  The Carry flag value is not used in the addition.
+SBI,0x22,subtract immediate from A,2,5,set if A underflows,set if zero,Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
+SBM,0x23,subtract memory from A,2,6,set if A underflows,set if zero,Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the addition.
+ACI,0x24,add immediate to A with carry,2,5,set if A overflows,set if zero,"Add A to immediate value and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1."
+ACM,0x25,add memory to A with carry,2,6,set if A overflows,set if zero,"Add A to value in data memory at the address argument and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1."
+SCI,0x26,subtract immediate from A with borrow,2,5,set if A underflows,set if zero,Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
+SCM,0x27,subtract memory from A with borrow,2,6,set if A underflows,set if zero,Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the addition.
+CPI,0x28,compare immediate to A,2,5,set if A < value,set if equal,Compare A to immediate value in the next byte of program memory.  Carry flag is set if A<value and Zero flag is set if A=value.  The value of A is not changed.
+CPM,0x29,compare memory to A,2,6,set if A < value,set if equal,Compare A to the value in data memory addressed by  the next byte of program memory.  Carry flag is set if A<value and Zero flag is set if A=value.  The value of A is not changed.

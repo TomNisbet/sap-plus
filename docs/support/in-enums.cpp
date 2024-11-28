@@ -12,8 +12,8 @@ enum {
     N_NOT = 0x09,  //   NOT A
     N_ASL = 0x0a,  //   arithmetic shift left A
     N_TST = 0x0b,  //   test A
-    N_CLC = 0x0c,  //   clear carry flag
-    N_SEC = 0x0d,  //   set carry flag
+    N_CLF = 0x0c,  //   clear carry and zero flags
+    N_SEF = 0x0d,  //   set carry and zero flags
     N_JMP = 0x10,  //   jump unconditional
     N_JC = 0x11,  //   jump on Carry
     N_JZ = 0x12,  //   jump on Zero
@@ -23,6 +23,10 @@ enum {
     N_PLA = 0x16,  //   pull A
     N_JSR = 0x17,  //   jump to subroutine
     N_RTS = 0x18,  //   return from subroutine
+    N_RC = 0x19,  //   return if carry
+    N_RZ = 0x1a,  //   return if zero
+    N_RNC = 0x1b,  //   return if not carry
+    N_RNZ = 0x1c,  //   return if not zero
     N_ADI = 0x20,  //   add  immediate to A
     N_ADM = 0x21,  //   add memory to A
     N_SBI = 0x22,  //   subtract immediate from A

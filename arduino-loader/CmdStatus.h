@@ -21,7 +21,7 @@ class CmdStatus
     void setValueHex(int index, const char * label, long value);
     void test(const char * msg);
     void pass();
-    void fail(uint8_t addr, uint8_t exp, uint8_t rd);
+    void fail(uint8_t exp, uint8_t rd, const char * msg="", uint8_t addr=0);
 
     bool isClear();
     void printStatus();

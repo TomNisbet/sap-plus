@@ -35,24 +35,34 @@ void CmdStatus::clear()
 
 void CmdStatus::info(const char * msg)
 {
+    Serial.println(msg);
+/*
     level = SL_INFO;
     message = msg;
     display.fillScreen(0);
     display.text2x(0, 0, msg);
+*/
 }
 
 void CmdStatus::test(const char * msg) {
+    Serial.print(F("Testing "));
+    Serial.print(msg);
+    Serial.print(F(": "));
+
     display.fillScreen(0);
     display.invertData(true);
     display.fillAreaWithByte(0, 0, 2, 128, 0);
-    display.text2x(0, 0, "Test");
-    display.text2x(0, 48, msg);
+    display.text2x(0, 0, "Test ");
+    display.text2x(0, 5*8, msg);
     display.invertData(false);
 }
 
 void CmdStatus::pass() {
+    Serial.println(F("pass"));
+
     display.text2x(3, 0, "PASS");
 }
+
 static void displayHex(uint8_t row, uint8_t charCol, uint8_t val) {
     char buffer[3];
 
@@ -62,18 +72,33 @@ static void displayHex(uint8_t row, uint8_t charCol, uint8_t val) {
     display.text2x(row, charCol*8, buffer);
 }
 
-void CmdStatus::fail(uint8_t addr, uint8_t exp, uint8_t rd) {
-    display.text2x(3, 0, "FAIL  Addr=");
-    displayHex(3, 11, addr);
+void CmdStatus::fail(uint8_t exp, uint8_t rd, const char * msg, uint8_t addr) {
+    Serial.print(F("failed"));
+
+
+    display.text2x(3, 0, "FAIL ");
+    if (msg == NULL) {
+        Serial.print(F("Addr="));
+        Serial.print(addr, HEX);
+        display.text2x(3, 5, "Addr=");
+        displayHex(3, 10, addr);
+    } else {
+        Serial.print(msg);
+        display.text2x(3, 5, msg);
+    }
+
+    Serial.print(F(", read="));
+    Serial.print(rd, HEX);
+    Serial.print(F(", expected="));
+    Serial.println(exp, HEX);
+
     display.text2x(6, 0, "exp=    read=");
     displayHex(6, 4, exp);
     displayHex(6, 13, rd);
 }
 
-void CmdStatus::error(const char * msg)
-{
-    level = SL_ERROR;
-    message = msg;
+void CmdStatus::error(const char * msg) {
+    Serial.println(msg);
 }
 
 void CmdStatus::setValueDec(int index, const char * label, long value)
@@ -136,5 +161,3 @@ void CmdStatus::printStatus()
     }
     Serial.println("");
 }
-
-

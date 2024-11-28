@@ -11,8 +11,8 @@
     // 09 NOT   4
     // 0a ASL   4
     // 0b TST   4
-    // 0c CLC   3
-    // 0d SEC   3
+    // 0c CLF   3
+    // 0d SEF   3
     // 0e
     // 0f
     // 10 JMP   4
@@ -24,23 +24,23 @@
     // 16 PLA   5
     // 17 JSR   7
     // 18 RTS   5
-    // 19
-    // 1a
-    // 1b
-    // 1c
+    // 19 RC   5
+    // 1a RZ   5
+    // 1b RNC   5
+    // 1c RNZ   5
     // 1d
     // 1e
     // 1f
-    // 20 ADI   
-    // 21 ADM   
-    // 22 SBI   
-    // 23 SBM   
-    // 24 ACI   
-    // 25 ACM   
-    // 26 SCI   
-    // 27 SCM   
-    // 28 CPI   
-    // 29 CPM   
+    // 20 ADI   5
+    // 21 ADM   6
+    // 22 SBI   5
+    // 23 SBM   6
+    // 24 ACI   5
+    // 25 ACM   6
+    // 26 SCI   5
+    // 27 SCM   6
+    // 28 CPI   5
+    // 29 CPM   6
     // 2a
     // 2b
     // 2c

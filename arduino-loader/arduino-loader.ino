@@ -25,8 +25,8 @@ enum {
     N_NOT = 0x09,  //   NOT A
     N_ASL = 0x0a,  //   arithmetic shift left A
     N_TST = 0x0b,  //   test A
-    N_CLC = 0x0c,  //   clear carry flag
-    N_SEC = 0x0d,  //   set carry flag
+    N_CLF = 0x0c,  //   clear carry and zero flags
+    N_SEF = 0x0d,  //   set carry and zero flags
     N_JMP = 0x10,  //   jump unconditional
     N_JC = 0x11,  //   jump on Carry
     N_JZ = 0x12,  //   jump on Zero
@@ -36,6 +36,10 @@ enum {
     N_PLA = 0x16,  //   pull A
     N_JSR = 0x17,  //   jump to subroutine
     N_RTS = 0x18,  //   return from subroutine
+    N_RC = 0x19,  //   return if carry
+    N_RZ = 0x1a,  //   return if zero
+    N_RNC = 0x1b,  //   return if not carry
+    N_RNZ = 0x1c,  //   return if not zero
     N_ADI = 0x20,  //   add  immediate to A
     N_ADM = 0x21,  //   add memory to A
     N_SBI = 0x22,  //   subtract immediate from A
@@ -147,7 +151,7 @@ void setup() {
 
     // burn the first sample program and return control to the host.  This lets the loader
     // (and then the host) run with no user interaction at power up.
-    burnProgram(0, 0x00);
+    burnProgram(3, 0x00);
     hw.disable();
 }
 
@@ -417,7 +421,7 @@ void fillBlock(uint32_t start, uint32_t end, byte val) {
     for (uint32_t addr = start; (addr <= end); addr += BLOCK_SIZE) {
         uint32_t writeLen = ((end - addr + 1) < BLOCK_SIZE) ? (end - addr + 1) : uint32_t(BLOCK_SIZE);
         if (!hw.writeData(block, writeLen, addr)) {
-//            cmdStatus.error("Write failed");
+            cmdStatus.error("Write failed");
             return;
         }
     }
@@ -434,27 +438,23 @@ void burnProgram(unsigned pgmIx, uint32_t start) {
         hw.enable();
         bool status = hw.writeData(pgmData, pgmLen, start);
         if (!status) {
-//            cmdStatus.error("Write failed");
+            cmdStatus.error("Write failed");
             return;
         }
 
         for (unsigned ix = 0; (ix < pgmLen); ix++) {
             byte val = hw.readByte(start + ix);
             if (val != pgmData[ix]) {
-//                cmdStatus.error("Verify failed");
-//                cmdStatus.setValueHex(0, "addr", start + ix);
-//                cmdStatus.setValueHex(1, "read", val);
-//                cmdStatus.setValueHex(2, "expected", pgmData[ix]);
+                cmdStatus.fail(pgmData[ix], val, NULL, start+ix);
                 return;
             }
         }
         hw.reset();
-//        cmdStatus.info("Write verification test successful");
+        cmdStatus.info("Write verified");
     }
 }
 
-void insertBytes(char * pCursor)
-{
+void insertBytes(char * pCursor) {
     uint32_t val;
     uint32_t start;
     unsigned byteCtr = 0;
@@ -470,11 +470,11 @@ void insertBytes(char * pCursor)
 
     if (byteCtr > 0) {
         if (!hw.writeData(data, byteCtr, start)) {
-//            cmdStatus.error("Write failed");
+            cmdStatus.error("Write failed");
             return;
         }
     } else {
-//        cmdStatus.error("Missing address or data");
+        cmdStatus.error("Missing address or data");
         return;
     }
     delay(100);
@@ -482,14 +482,11 @@ void insertBytes(char * pCursor)
     for (unsigned ix = 0; ix < byteCtr ; ix++) {
         byte val = hw.readByte(start + ix);
         if (val != data[ix]) {
-//            cmdStatus.error("Verify failed");
-//            cmdStatus.setValueHex(0, "addr", start + ix);
-//            cmdStatus.setValueHex(1, "read", val);
-//            cmdStatus.setValueHex(2, "expected", data[ix]);
+            cmdStatus.fail(data[ix], val, NULL, start+ix);
             return;
         }
     }
-//    cmdStatus.info(" successful");
+    cmdStatus.info(" successful");
 }
 
 void printRegisterNames() {
@@ -499,7 +496,6 @@ void printRegisterNames() {
         Serial.print(" - ");
         Serial.println(hw.registerName(num));
     }
-
 }
 
 enum {
@@ -536,8 +532,7 @@ Fssss eeee vv fill memory
 Xssss eXamine memory will step through and can change values see gwmon
 T - test memory, alu, and all registers.  R/W registers will verify a set of values. R/O registers will do the light show. Some R/O are implicitly tested.
 */
-byte parseCommand(char c)
-{
+byte parseCommand(char c) {
     byte cmd = CMD_INVALID;
 
     // Convert the command to lowercase.
@@ -589,7 +584,7 @@ void processCommand() {
 
     switch (cmd) {
     case CMD_CTRL:
-        hw.writeControls(uint16_t(a1));
+        hw.writeControls(uint8_t(a1));
         break;
 
     case CMD_DUMP:
@@ -679,6 +674,7 @@ void processCommand() {
         Serial.println(F("  Xss       - eXamine (and optionally modify) RAM"));
 
         Serial.println(F("\nRegister and hardware commands:"));
+        Serial.println(F("  Ccc       - Set control bits to cc (0..3f)"));
         Serial.println(F("  Gr        - Get (read) and print register value"));
         Serial.println(F("  Pr dd     - Put (write) value to register"));
         Serial.println(F("  =r1 r2    - Assign (r1=r2) copy value from register r2 to r1"));

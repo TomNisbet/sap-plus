@@ -12,6 +12,8 @@ docs:
         url: /docs/loader/
       - title: "Bus Signals"
         url: /docs/bus-signals/
+      - title: "Microcode"
+        url: /docs/microcode/
   - title: "Instruction Set"
     children:
       - title: "Instruction Summary"

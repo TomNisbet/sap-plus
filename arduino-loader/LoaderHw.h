@@ -36,13 +36,14 @@ class LoaderHw {
     bool mEnabled;
 
     bool burnByte(byte value, uint8_t address);
-    bool valueTest(uint8_t writeVal, uint8_t readVal, const char * s="");
+    bool valueTest(uint8_t writeVal, uint8_t readVal, const char * s="", uint8_t addr=0);
     bool testOutputRegister();
     bool testRegister(unsigned reg, bool isRw);
     bool testCounters(uint8_t count);
     bool testMemory(bool highMem);
-    bool testAdder();
-    bool testAdderOperation(uint8_t a, uint8_t b);
+    bool testAlu();
+    bool testAdder(bool sub, uint8_t carry);
+    bool testAdderOperation(uint8_t a, uint8_t b, bool sub, uint8_t carry);
 
     void selectWriteRegister(uint8_t reg);
     void selectReadRegister(uint8_t reg);

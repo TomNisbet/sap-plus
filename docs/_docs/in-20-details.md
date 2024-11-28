@@ -21,11 +21,11 @@ then start at zero and grow upward.
 
 |           |           |           |           |           |           |           |           |
 |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |
-|[ACI](#aci)|[ACM](#acm)|[ADI](#adi)|[ADM](#adm)|[ASL](#asl)|[CLC](#clc)|[CPI](#cpi)|[CPM](#cpm)|
+|[ACI](#aci)|[ACM](#acm)|[ADI](#adi)|[ADM](#adm)|[ASL](#asl)|[CLF](#clf)|[CPI](#cpi)|[CPM](#cpm)|
 |[DCA](#dca)|[INA](#ina)|[JC](#jc)|[JMP](#jmp)|[JNC](#jnc)|[JNZ](#jnz)|[JSR](#jsr)|[JZ](#jz)|
-|[LAI](#lai)|[LAM](#lam)|[NOP](#nop)|[NOT](#not)|[OUT](#out)|[PHA](#pha)|[PLA](#pla)|[RTS](#rts)|
-|[SAM](#sam)|[SBI](#sbi)|[SBM](#sbm)|[SCI](#sci)|[SCM](#scm)|[SEC](#sec)|[TAS](#tas)|[TSA](#tsa)|
-|[TST](#tst)|
+|[LAI](#lai)|[LAM](#lam)|[NOP](#nop)|[NOT](#not)|[OUT](#out)|[PHA](#pha)|[PLA](#pla)|[RC](#rc)|
+|[RNC](#rnc)|[RNZ](#rnz)|[RTS](#rts)|[RZ](#rz)|[SAM](#sam)|[SBI](#sbi)|[SBM](#sbm)|[SCI](#sci)|
+|[SCM](#scm)|[SEF](#sef)|[TAS](#tas)|[TSA](#tsa)|[TST](#tst)|
 
 ## ACI
 
@@ -39,7 +39,7 @@ Add A to immediate value and store the result in A.  The Carry flag value is inc
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|ACI|0x24|2||
+|ACI|0x24|2|5|
 
 ## ACM
 
@@ -53,7 +53,7 @@ Add A to value in data memory at the address argument and store the result in A.
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|ACM|0x25|2||
+|ACM|0x25|2|6|
 
 ## ADI
 
@@ -67,7 +67,7 @@ Add A to immediate value and store the result in A.  The Carry flag value is not
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|ADI|0x20|2||
+|ADI|0x20|2|5|
 
 ## ADM
 
@@ -81,7 +81,7 @@ Add A to value  in data memory at the address argument and store the result in A
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|ADM|0x21|2||
+|ADM|0x21|2|6|
 
 ## ASL
 
@@ -97,9 +97,9 @@ Shift A one position left.  Least significant bit of A takes the value of the Ca
 :--- |:---: |:---:|:---: |
 |ASL|0x0a|1|4|
 
-## CLC
+## CLF
 
-clear carry flag
+clear carry and zero flags
 
 Clear carry flag.  Zero flag is set.
 
@@ -109,7 +109,7 @@ Clear carry flag.  Zero flag is set.
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|CLC|0x0c|1|3|
+|CLF|0x0c|1|3|
 
 ## CPI
 
@@ -123,7 +123,7 @@ Compare A to immediate value in the next byte of program memory.  Carry flag is 
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|CPI|0x28|2||
+|CPI|0x28|2|5|
 
 ## CPM
 
@@ -137,7 +137,7 @@ Compare A to the value in data memory addressed by  the next byte of program mem
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|CPM|0x29|2||
+|CPM|0x29|2|6|
 
 ## DCA
 
@@ -349,6 +349,48 @@ Pull accumulator from the stack.  SP is incremented.
 :--- |:---: |:---:|:---: |
 |PLA|0x16|1|5|
 
+## RC
+
+return if carry
+
+Return from subroutine if Carry flag is set else no operation.
+
+**Carry Flag:** 
+
+**Zero Flag:** 
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|RC|0x19|1|5|
+
+## RNC
+
+return if not carry
+
+Return from subroutine if Carry flag is not set else no operation.
+
+**Carry Flag:** 
+
+**Zero Flag:** 
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|RNC|0x1b|1|5|
+
+## RNZ
+
+return if not zero
+
+Return from subroutine if Zero flag is not set else no operation.
+
+**Carry Flag:** 
+
+**Zero Flag:** 
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|RNZ|0x1c|1|5|
+
 ## RTS
 
 return from subroutine
@@ -362,6 +404,20 @@ Return from subroutine.  PC is pulled from the stack and SP is incremented.
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
 |RTS|0x18|1|5|
+
+## RZ
+
+return if zero
+
+Return from subroutine if Zero flag is set else no operation.
+
+**Carry Flag:** 
+
+**Zero Flag:** 
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|RZ|0x1a|1|5|
 
 ## SAM
 
@@ -389,7 +445,7 @@ Subtract  immediate value from A and store the result in A.  The Carry flag valu
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|SBI|0x22|2||
+|SBI|0x22|2|5|
 
 ## SBM
 
@@ -403,7 +459,7 @@ Subtract  value in data memory at the address argument from A and store the resu
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|SBM|0x23|2||
+|SBM|0x23|2|6|
 
 ## SCI
 
@@ -417,7 +473,7 @@ Subtract  immediate value from A and store the result in A.  The Carry flag valu
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|SCI|0x26|2||
+|SCI|0x26|2|5|
 
 ## SCM
 
@@ -431,11 +487,11 @@ Subtract  value in data memory at the address argument from A and store the resu
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|SCM|0x27|2||
+|SCM|0x27|2|6|
 
-## SEC
+## SEF
 
-set carry flag
+set carry and zero flags
 
 Set carry flag. Zero flag is cleared.
 
@@ -445,7 +501,7 @@ Set carry flag. Zero flag is cleared.
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|SEC|0x0d|1|3|
+|SEF|0x0d|1|3|
 
 ## TAS
 
@@ -490,4 +546,4 @@ Test A for sign and zero.  Carry flag becomes a minus flag (A<0) and zero flag i
 |TST|0x0b|1|4|
 
 
-*this file was generated by sap-plus-instructions.py at 16-Oct-2024 16:07:32*
+*this file was generated by sap-plus-instructions.py at 27-Nov-2024 21:17:05*
