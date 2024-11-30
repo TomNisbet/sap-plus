@@ -8,6 +8,7 @@
 !*-gerbers.zip
 *-gerbers/
 *-backups/
+_autosave-*.sch
 
 # exclude local working directories
 scratch/

@@ -1,0 +1,25 @@
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "ac288557-ced6-403e-9f15-9ff7732473a1")
+	(paper "A4")
+	(title_block
+		(title "SAP-Plus blackplane connectors")
+		(date "2024-09-18")
+		(rev "1.0")
+		(company "github.com/TomNisbet/sap-plus")
+	)
+	(lib_symbols)
+	(text "Additional Backplane Connectors"
+		(exclude_from_sim no)
+		(at 124.46 29.21 0)
+		(effects
+			(font
+				(size 2.4892 2.4892)
+			)
+			(justify left bottom)
+		)
+		(uuid "634352a3-d1e7-410f-8822-cdf633ce802c")
+	)
+)
