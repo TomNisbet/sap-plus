@@ -1888,8 +1888,8 @@
 				)
 			)
 		)
-		(property "Value" "RUN"
-			(at 4.5 5.08 0)
+		(property "Value" "STOP"
+			(at 4.95 5.13 0)
 			(layer "F.SilkS")
 			(uuid "9c9c8cba-6f90-4b64-b47c-6713ec61b0c5")
 			(effects
@@ -1938,8 +1938,8 @@
 				)
 			)
 		)
-		(property "Field5" "STOP"
-			(at 4.75 0 0)
+		(property "Field5" "RUN"
+			(at 4.9 -0.07 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "bb23845e-cf08-4812-ba61-66159057da24")

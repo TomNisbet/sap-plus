@@ -10779,7 +10779,7 @@
 				)
 			)
 		)
-		(property "Value" "RUN"
+		(property "Value" "STOP"
 			(at 68.834 174.244 0)
 			(effects
 				(font

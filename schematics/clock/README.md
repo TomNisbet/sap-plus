@@ -7,6 +7,7 @@ created with KiCad 8.0
 ### 1.1
 
 * Add missing connection on pin 4 of 555 timer
+* Swap labels on RUN/STOP switch
 
 ### 1.0
 
