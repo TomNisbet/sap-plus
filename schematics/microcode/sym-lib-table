@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "microcode-rescue")(type "KiCad")(uri "${KIPRJMOD}/microcode-rescue.kicad_sym")(options "")(descr ""))
+)
