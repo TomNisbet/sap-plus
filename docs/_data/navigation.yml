@@ -6,12 +6,12 @@ docs:
         url: /
   - title: "Design"
     children:
-      - title: "Backplane"
+      - title: "Backplane and Bus"
         url: /docs/backplane/
+      - title: "System"
+        url: /docs/system/
       - title: "Loader/Debugger"
         url: /docs/loader/
-      - title: "Bus Signals"
-        url: /docs/bus-signals/
       - title: "Microcode"
         url: /docs/microcode/
   - title: "Instruction Set"

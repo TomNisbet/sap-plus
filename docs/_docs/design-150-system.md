@@ -1,9 +1,22 @@
 ---
-title: "Bus Signals"
-permalink: /docs/bus-signals/
-excerpt: "Bus signals list for the SAP-Plus computer"
+title: "System Design"
+permalink: /docs/system/
+excerpt: "System-level design of the SAP-Plus computer"
 ---
 
+## Layout and Interconnects
+
+The module interconnect headers on the backplane are used to connect signals that are common to a small number of boards.  These interconnects keep the bus connectors limited to signals that are typically used system-wide.  This does force the placement of some modules in the final assembled computer.  The current design has two groups of related modules that need to occupy the same backplane:
+
+**Loader, Microcode, IR/SC**
+
+The Loader provides register select signals to the 3-to-8 decoers on the Microcode board when the loader is active and the Microcode ROMs are disabled.  The outputs of the Instruction Register and Step Counter are sent to the Microcode module to be used as address inputs to the EEPROMs.  
+
+**A/B Registers and ALU**
+
+The A/B Register Module passes the outputs of its registers to the ALU as the as the operands for arithmetic calculations.
+
+## Bus Signal List
 
 |Pin|Name|Description|
 |:---|:---|:---|
@@ -47,3 +60,4 @@ excerpt: "Bus signals list for the SAP-Plus computer"
 |38|LD-A|Loader Active|
 |39|GND|Ground|
 |40|+5V|+5V Power|
+|====
