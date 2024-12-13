@@ -12,7 +12,7 @@ With an 6-bit Instruction Register and a 4-bit Ring Counter, the SAP-Plus can su
 
 On the SAP-Plus Microcode Module, the ROM0 chip has A14, A13, and A12 tied to GND, so ROM0 is only accessing addresses 0000 to 0fff.  The ROM1 chip has A14 and A13 tied to GND and A12 tied to +5V, so ROM1 is always accessing addresses 1000 to 1fff.  ROM0 provides the miscellaneous control signals and ROM1 provides the seven register select signals that drive the 74LS138 selectors.
 
-[![Microcode ROMs schematic](../../assets/images/microcode-schematic.png "Microcode ROMs schematic"){:width="720px"}](../../assets/images/microcode-schematic.png)
+[![Microcode ROMs schematic](../../assets/images/microcode-schematic-small.png "Microcode ROMs schematic")](../../assets/images/microcode-schematic.png)
 
 The microcode is stored in two 28C256 32Kx8 EEPROMs, giving 16 control signals.  The signals can be driven by the ROMs or by the Arduino Loader/Debugger.  When the Arduino is active, the OE signal of the ROMs is disabled.  The LEDs always show the state of the control lines, whether they are driven by the ROMs or by the Loader.
 

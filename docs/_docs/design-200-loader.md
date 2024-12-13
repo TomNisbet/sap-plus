@@ -33,7 +33,7 @@ The Loader writes a default program to the SAP-Plus memory at power up, allowing
 
 ## Loader Design
 
-[![Arduino Loader](../../assets/images/loader-schematic.png "loader/debugger"){:width="720px"}](../../assets/images/loader-schematic.png)
+[![Arduino Loader](../../assets/images/loader-schematic-small.png "loader/debugger")](../../assets/images/loader-schematic.png)
 
 The Ben Eater RAM design uses multiplexers to select either the bus or a set of dip switches to load the RAM and MAR.  The SAP-PLus loader takes a different approach.  When active, the Loader disables the Microcode ROMs and generates its own control signals.  With this approach, it can read or write to any register, not just the RAM and MAR. It can also generate CLK and RST signals.  It can select a register, put a value on the data bus, and then pulse the CLK line to load the bus value into the register.
 
