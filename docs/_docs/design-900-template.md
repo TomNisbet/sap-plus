@@ -14,6 +14,9 @@ To design a new module, copy the template files to a new directory.  Edit the sc
 
 When the schematic is complete, delete andyunused signal labels on the bus connectors and mark them as no-connect.  This will prevent errors from being flagged in KiCad's Electrical Rules Check (ERC).
 
+**Note:** Rather than being connected left-to-left and right-to-right, the interconnects have the inner pins connected and the outer pins connected.  A module needing 8 or fewer connections could populate a smaller 1x8 connector at the outermost edge of the board instead of the 2x8 to save space.
+{: .notice--danger}
+
 
 ## Prototype Module
 
