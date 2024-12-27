@@ -28,6 +28,6 @@ Smaller connectors can be used if fewer pins are needed.  For example, the left 
 
 ## Prototype Module
 
-When designing new modules, it can be useful to order a set of blank template boards to be used for prototyping.  The tepmlate module board can is assembled using longer pin connectors that leave room for connections on top of the board. The prototype board is inserted into the backplane and the top pins are jumpered to a breadboard.  With this method, temporary boards can be created that can be plugged in and removed from the system while keeping all of the connections to the breadboard intact.
+When designing new modules, it can be useful to order a set of blank template boards to be used for prototyping.  The template module board is assembled using longer pin connectors that leave room for connections on top of the board. The prototype board is inserted into the backplane and the top pins are jumpered to a breadboard.  With this method, temporary boards can be created that can be plugged in and removed from the system while keeping all of the connections to the breadboard intact.
 
-[![Module Prototyping](../../assets/images/template-prototype-small.png "module protoytype using template board")](../../assets/images/template-prototype.png) [![Module Prototyping](../../assets/images/template-pins-small.png "module protoytype using template board")](../../assets/images/template-pins.png)
+[![Module Prototyping](../../assets/images/template-prototype-small.png "module protoytype using template board")](../../assets/images/template-prototype.png) [![Module Prototyping](../../assets/images/template-pins-small.png "module template board with long pins")](../../assets/images/template-pins.png)
