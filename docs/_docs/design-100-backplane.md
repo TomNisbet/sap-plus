@@ -32,7 +32,8 @@ Backplane boards have additional 40-pin bus connectors along the top and bottom 
 
 A pair of 2x8 pin headers is provided between each board to make module-to-module connections.  A module board can use both sets of connectors for a total of 32 pins. 
 
-**Note:** Rather than being connected left-to-left and right-to-right, the interconnects have the inner pins connected and the outer pins connected.  A module needing 8 or fewer connections could populate just a 1x8 connector instead of a 2x8 to save space.{: .notice--warning}
+**Note:** Rather than being connected left-to-left and right-to-right, the interconnects have the inner pins connected and the outer pins connected.  A module needing 8 or fewer connections could populate just a 1x8 connector instead of a 2x8 to save space.
+{: .notice--warning}
 
 
 [![Backplane with modules](../../assets/images/backplanes-with-modules.jpg "backplane with module boards")](../../assets/images/backplanes-with-modules.jpg)
