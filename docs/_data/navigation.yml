@@ -16,6 +16,8 @@ docs:
         url: /docs/microcode/
       - title: "System Clock"
         url: /docs/clock/
+      - title: "IR and SC"
+        url: /docs/ir-sc/
       - title: "Module Template"
         url: /docs/template/
   - title: "Instruction Set"

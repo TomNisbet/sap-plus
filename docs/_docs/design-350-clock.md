@@ -1,7 +1,7 @@
 ---
 title: "System Clock"
 permalink: /docs/clock/
-excerpt: "System clock for the NQSAP-PCB computer"
+excerpt: "System clock for the SAP-Plus computer"
 ---
 
 The Clock Module provides the master timing signal (CLK) for the system. The clock pulse can come from one of three sources:
