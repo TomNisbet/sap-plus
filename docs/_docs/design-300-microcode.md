@@ -4,9 +4,9 @@ permalink: /docs/microcode/
 excerpt: "Microcode ROMs for the SAP-Plus computer"
 ---
 
-[![Microcode ROMs](../../assets/images/microcode-board-500.jpg "Microcode ROMs")](../../assets/images/microcode-board.jpg)
-
 The microcode ROMs drive the 16 control signals for the SAP-Plus computer.  This board contains the ROMs and LEDs for all control signals.
+
+[![Microcode ROMs](../../assets/images/microcode-module-small.png "Microcode ROMs")](../../assets/images/microcode-module.png)
 
 With an 6-bit Instruction Register and a 4-bit Ring Counter, the SAP-Plus can support 64 unique instructions with 16 microcode steps each. The remaining two bits of the IR contain the Carry and Zero flags. This consumes 12 of the 15 available address pins on the ROMs. The chip select uses 1 more pin, and 2 address pins are unused and tied to ground.
 

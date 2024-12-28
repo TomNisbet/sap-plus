@@ -8,7 +8,7 @@ The program memory loader uses an Arduino Nano in place of manual-entry DIP swit
 
 Beyond the ability to simply load programs into memory, the Loader can read and write all of the SAP-Plus registers and drive any other control signals. This gives the Loader the capability to perform a comprehensive system verification.  This system test is helpful for verifying the operation of new modules.
 
-[![Arduino Loader](../../assets/images/loader.png "loader")](../../assets/images/loader.png)
+[![Arduino Loader](../../assets/images/loader-module-small.png "loader")](../../assets/images/loader-module.png)
 
 An 128x64 OLED display is included to show the status of the self test and other operations.  The display is driven by [SSD1306lite](https://github.com/TomNisbet/ssd1306lite), a simple OLED display driver with a very small RAM footprint. The OLED code was developed for this project because existing drivers either had too many configuration options or used too much memory, not leaving enough for the Loader itself.  The SSD1306lite code was written specifically for a single display type driven by an Arduino.  It is easily adapted to other projects needing a basic display. 
 
