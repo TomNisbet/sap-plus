@@ -14,6 +14,8 @@ docs:
         url: /docs/loader/
       - title: "Microcode"
         url: /docs/microcode/
+      - title: "System Clock"
+        url: /docs/clock/
       - title: "Module Template"
         url: /docs/template/
   - title: "Instruction Set"
