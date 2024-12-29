@@ -8,16 +8,18 @@ docs:
     children:
       - title: "Backplane and Bus"
         url: /docs/backplane/
-      - title: "System"
+      - title: "System Design"
         url: /docs/system/
+      - title: "System Clock"
+        url: /docs/clock/
       - title: "Loader/Debugger"
         url: /docs/loader/
       - title: "Microcode"
         url: /docs/microcode/
-      - title: "System Clock"
-        url: /docs/clock/
       - title: "IR and SC"
         url: /docs/ir-sc/
+      - title: "RAM and MAR"
+        url: /docs/ram-mar/
       - title: "Module Template"
         url: /docs/template/
   - title: "Instruction Set"
