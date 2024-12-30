@@ -22,6 +22,8 @@ docs:
         url: /docs/ram-mar/
       - title: "PC and SP"
         url: /docs/program-counter-stack-pointer/
+      - title: "A/B Registers"
+        url: /docs/a-b-registers/
       - title: "Module Template"
         url: /docs/template/
   - title: "Instruction Set"
