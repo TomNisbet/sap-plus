@@ -4,7 +4,7 @@ permalink: /docs/program-counter-stack-pointer/
 excerpt: "Program Counter and Stack Pointer for the SAP-Plus computer"
 ---
 
-The Program Counter (PC) and Stack Pointer (SP)Module implements two unrelated resisters.  There are no interconnections or dependencies between the PC and SP, so they are co-located only because each design is simple and both could be implemented together on a single board.
+The Program Counter (PC) and Stack Pointer (SP) Module implements two unrelated registers.  There are no interconnections or dependencies between the PC and SP, so they are co-located only because each design is simple and both could be implemented together on a single board.
 
 [![Program Counter and Stack Pointer](../../assets/images/pc-sp-module-small.png "program counter and stack pointer module")](../../assets/images/pc-sp-module.png)
 
@@ -34,10 +34,10 @@ Unlike the 74LS161, the 74LS193 counters do not have a master clock or a count e
 
 Spare bus and microcode signals are in short supply.  Rather than adding two new signals for the SP count up and down operations, a single Stack Count (_SC_) signal was added.  This is used in conjunction with the shared _CX_ carry control signal to control counting in the SP. Asserting both _SC_ and _CX_ will cause the SP to count down and _SC_ without _CX_ will to cause it to count up.  The _SC_ and _CX_ signals are combined with the _CLK_ signal to produce the pulses for the _DOWN_ and _UP_ lines.
 
-The shared use of the _CX_ signal means that the carry flag cannot be modified in the same microinstruction step where the SP is counting.  The normal use of the _CX_ signal will not cause the SP to count because the _SC_ signal will not be asserted.  Note that the _CX_ signals IS also be shared by the RAM, so SP and RAM access operations also cannot happen in a single microinstruction step.
+The shared use of the _CX_ signal means that the carry flag cannot be modified in the same microinstruction step where the SP is counting.  The normal use of the _CX_ signal will not cause the SP to count because the _SC_ signal will not be asserted.  Note that the _CX_ signals is also shared by the RAM, so SP and RAM access operations also cannot happen in a single microinstruction step.
 {: .notice--info}
 
-The combined _SC_ and _CX_ signals are also used to drive the UP and DN indicator LEDs when _SC_ is active.  This is preferble to just adding LEDs to the raw _SC_ and _CX_ signals because _CX_ would give a misleading indication on the Stack Pointer Module when the _CX_ signal was used elsewhere in the system.
+The combined _SC_ and _CX_ signals are also used to drive the UP and DN indicator LEDs when _SC_ is active.  This is preferable to just adding LEDs to the raw _SC_ and _CX_ signals because _CX_ would give a misleading indication on the Stack Pointer Module when the _CX_ signal was used elsewhere in the system.
 
 ### Stack Pointer microcode
 
@@ -69,7 +69,7 @@ An alternate approach that would not require temporary storage would be to push 
 ## Bill of Materials
 
 * 74HCT00 quad 2-input NAND gate(1)
-* 74HCT32 quad 2-input OR(1)
+* 74HCT32 quad 2-input OR gate(1)
 * 74LS161 4-bit counter (2)
 * 74LS193 4-bit up/down counter (2)
 * 74HCT245 8-bit bus transceiver (2)
