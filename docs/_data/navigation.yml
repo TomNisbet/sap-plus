@@ -24,6 +24,8 @@ docs:
         url: /docs/program-counter-stack-pointer/
       - title: "A/B Registers"
         url: /docs/a-b-registers/
+      - title: "ALU"
+        url: /docs/alu/
       - title: "Module Template"
         url: /docs/template/
   - title: "Instruction Set"
