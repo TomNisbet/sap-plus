@@ -19,7 +19,7 @@ The ALU Module supports the following operations:
 * Add A to immediate or memory
 * Add A with Carry to immediate or memory
 * Subtract immediate or memory from A
-* Subtract immediate or memory from a with Borrow
+* Subtract immediate or memory from A with Borrow
 * Compare A to immediate or memory
 * NOT A (invert all bits of A)
 * Increment A
@@ -31,7 +31,7 @@ The Increment and Decrement operations have the B register read from the data bu
 
 The SP-PLUS ALU has two subtle differences from the [Ben Eater SAP-1](https://eater.net/8bit/) that give it extra functionality.  The first is that the zero-detect circuit is connected to the data bus instead of the ALU outputs.  This lets it detect zeros from any source, so it can be used with non-ALU instructions.
 
-The second change is that the _SU_ signal on the SAP-1 is separated into individual _BI_ and _CX_ signals that invert the B register and feed the carry in signal of the adders.  This change allows the _NOT_, _INC_ and _DEC_ instructions.  It also enables the _ADC_ and _Sxxxxx_, that can be used to write code to add or subtract numbes larger than eight bits.
+The second change is that the _SU_ signal on the SAP-1 is separated into individual _BI_ and _CX_ signals that invert the B register and feed the carry-in signal of the adders.  This change allows the _NOT_, _INC_ and _DEC_ instructions.  It also enables the _ADC_ and _SBC_, that can be used to create code to add or subtract numbers larger than eight bits.
 
 [![NQSAP ALU schematic)](../../assets/images/alu-schematic.png "ALU schematic"){:width="500px"}](../../assets/images/alu-schematic.png)
 
@@ -46,20 +46,20 @@ The zero flag is set if all bits on the data bus are zero.  Using the bus instea
 
 The zero flag is calculated using three 3-input OR gates feeding a 3-input NAND gate.  The output of the NAND gate is then inverted by a second NAND, making those two gates equivalent to a single 3-input AND gate.  
 
-The original 1.0 version of the board actually used a triple 3-input AND gate for zero detect with two gates unused, but this board mistakenly connected the active-HIGH _FL_ signal to the flags register.  The 74LS173 chip used for the flags needed an active-LOW signal rather than ative-HIGH, so the AND gates were replaced by NANDs with one of the spare gates used to invert the _FL_ signal and the other inverting the zero-detect NAND back to an AND.  The board photo above shows the NAND gate soldered on top of the old AND gate with wires making the new connections.
+The original 1.0 version of the board actually used a triple 3-input AND gate for zero detect with two gates unused, but this board mistakenly connected the active-HIGH _FL_ signal to the flags register.  The 74LS173 chip used for the flags needed an active-LOW signal rather than active-HIGH, so the AND gates were replaced by NANDs with one of the spare gates used to invert the _FL_ signal and the other spare gate inverting the zero-detect NAND back to an AND.  The board photo shows the NAND gate soldered on top of the old AND gate with wires making the new connections.
 {: .notice--info}
 
 ### Carry flag
 
-The SAP-Plus addition and subtraction operations are modeled after the 6502 processor.  An addition with carry instruction will produce A+B when carry is clear and A+B+1 when carry is set.  The carry flag will be set at the completion of the operation if the addition carried into the non-existent ninth bit.
+The SAP-Plus addition and subtraction operations are modeled after the 6502 processor.  An addition with carry instruction will produce A+B when carry is clear and A+B+1 when carry is set.  The carry flag will be set at the completion of the operation if the addition carried into the nonexistent ninth bit.
 
-A subtraction with carry operation will effectively produce A-B-1 when the carry bit is clear and A-B when the carry is set.  The carry flag will be cleared at the completion of the operation if the subtraction required a borrow from the non-existent ninth bit.
+A subtraction with carry operation will effectively produce A-B-1 when the carry bit is clear and A-B when the carry is set.  The carry flag will be cleared at the completion of the operation if the subtraction required a borrow from the nonexistent ninth bit.
 
 ## Subtraction with an adder
 
 The 74LS283 adder adds two 4-bit numbers together.  There is no input to tell it to do subtraction.  But a subtraction problem can be rewritten as addition of the negative number.  For example, 5-2 is the same as 5 + -2.
 
-To negate a number in twos-complement notation, invert all of the bits and add 1.  For example, to negate the 4-bit value 2 do the following:
+To negate a number in twos-complement notation, invert all of the bits and add 1.  For example, to negate the 4-bit value 2, do the following:
 
 ``` C
 0010 = 2
@@ -93,26 +93,10 @@ binary 0011 is 3, so 5 - 2 = 5 + -2 = 3
 
 The calculation above still works when the 4-bit values viewed as unsigned numbers: 1110 is 14, so the problem could also be viewed as 5 + 14 = 19.  The number 19 in binary is 16+2+1 or 10011, which is the answer above for 5 + -2.
 
-### Carry bit in addition and subtraction
+The ALU can add A + -B by inverting B and then setting the _CX_ flag to indicate carry-in to the adder.  This gives the effect of making B negative by inverting and adding one.
+{: .notice--info}
 
-|Binary|Unsigned|2's Complement|
-|:---:|:---:|:---:|
-|0000 | 0| 0|
-|0001 | 1| 1|
-|0010 | 2| 2|
-|0011 | 3| 3|
-|0100 | 4| 4|
-|0101 | 5| 5|
-|0110 | 6| 6|
-|0111 | 7| 7|
-|1000 | 8| -8|
-|1001 | 9| -7|
-|1010 |10| -6|
-|1011 |11| -5|
-|1100 |12| -4|
-|1101 |13| -3|
-|1110 |14| -2|
-|1111 |15| -1|
+### Carry bit in addition and subtraction
 
 When doing a simple addition problem, a C=1 carry flag indicates that the result did not fit in the number of bits available.  If two adders are chained together, a carry from the lower adder indicates that the higher adder should add one more to its result.
 
@@ -145,3 +129,28 @@ For the case where a borrow is needed, consider this problem:
 ```
 
 In this case, the C=0 carry-out from the lower adder leaves the upper 4-bits all set, so the answer is -3, which is correct.
+
+Another way of understanding the behavior of the carry bit is to look at the way 2's complement numbers are formed.
+
+|Binary|Unsigned|2's Complement|
+|:---:|:---:|:---:|
+|0000 | 0| 0|
+|0001 | 1| 1|
+|0010 | 2| 2|
+|0011 | 3| 3|
+|0100 | 4| 4|
+|0101 | 5| 5|
+|0110 | 6| 6|
+|0111 | 7| 7|
+|1000 | 8| -8|
+|1001 | 9| -7|
+|1010 |10| -6|
+|1011 |11| -5|
+|1100 |12| -4|
+|1101 |13| -3|
+|1110 |14| -2|
+|1111 |15| -1|
+
+Adding one to any number above gives a large number, even with the negative numbers.  For example, -4 follows -5 in the table and -4 is the larger number.  The carry flag adds one to any number, so C=1 means the result gets larger and C=0 means it does not.  If the carry flag is zero, it means that the result will be one less than if it were set.
+
+Note that the jump from 7 to -8 seems to break this rule, but it does not because 7+1=8 and the number 8 cannot be represented in a 4-bit 2's-complement.  Adding 7+1 is an overflow condition when treating the numbers as signed values.
