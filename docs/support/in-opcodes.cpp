@@ -11,8 +11,8 @@
     // 09 NOT   4
     // 0a ASL   4
     // 0b TST   4
-    // 0c CLF   3
-    // 0d SEF   3
+    // 0c CLF   4
+    // 0d SEF   4
     // 0e
     // 0f
     // 10 JMP   4
@@ -20,7 +20,7 @@
     // 12 JZ   4
     // 13 JNC   4
     // 14 JNZ   4
-    // 15 PHA   4
+    // 15 PHA   5
     // 16 PLA   5
     // 17 JSR   7
     // 18 RTS   5

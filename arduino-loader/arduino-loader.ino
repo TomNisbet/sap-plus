@@ -88,6 +88,10 @@ static const uint8_t pgmSimple[] = {
     N_JMP, 2     // JMP back to LOOP
 };
 
+static const uint8_t pgmFastCount[] = {
+    // No code - special case - the loader fills memory with repeated N_INA, N_OUT
+};
+
 static const uint8_t pgmCount3[] = {
     // Count by 3
     N_LAI, 10,   // start at 10
@@ -100,12 +104,16 @@ static const uint8_t pgmCount3[] = {
 static const uint8_t pgmStack1[] = {
     N_LAI, 0xff,
     N_TAS,
-    N_LAI, 10,    // Test stack - load value to A and push, change A, pop
+    N_LAI, 0,    // Test stack - load value to A and push, change A, pop
+// LOOP
+    N_OUT,
     N_PHA,
-    N_INA,
-    N_INA,
+    N_ACI, 3,
+    N_OUT,
     N_PLA,
-    N_JMP, 0x03
+    N_OUT,
+    N_INA,
+    N_JMP, 0x05
 };
 
 static const uint8_t pgmPattern[] = {
@@ -123,6 +131,7 @@ struct program_t {
 static const program_t programs[] = {
     pgmPattern,     sizeof(pgmPattern),
     pgmSimple,      sizeof(pgmSimple),
+    pgmFastCount,   0,
     pgmShift,       sizeof(pgmShift),
     pgmCount3,      sizeof(pgmCount3),
     pgmStack1,      sizeof(pgmStack1)
@@ -141,13 +150,6 @@ void setup() {
     Serial.begin(115200);
     hw.begin();
     cmdStatus.clear();
-
-    //display.fillAreaWithByte(2, 0, 2, 64, 0xaa);
-    //display.fillAreaWithBytes(2, 64, 2, 64, "\x55\xaa", 2);
-    //display.fillAreaWithBytes(5, 0, 3, 128, "\x80\x40\x20\x10\x08\x04\x02\x01", 8);
-    //display.string8x16(3, 0, "ABCDEFGHIJKLMNOPcliped");
-    //display.string8x16(6, 0, "abcdefghijklmnopEXTRA_TEXT_CLIPPED");
-//    display.drawImage(4, 41, 8, 128, img1_128x64c1);
 
     // burn the first sample program and return control to the host.  This lets the loader
     // (and then the host) run with no user interaction at power up.
@@ -427,12 +429,29 @@ void fillBlock(uint32_t start, uint32_t end, byte val) {
     }
 }
 
+void burnFastCount() {
+    Serial.println(F("Filling program memory with FastCount"));
+    hw.enable();
+    uint8_t buffer[2] = { N_OUT, N_INA };
+    for (unsigned ix = 0; (ix < 256); ix+= sizeof(buffer)) {
+        bool status = hw.writeData(buffer, sizeof(buffer), ix);
+        if (!status) {
+            cmdStatus.error("Write failed");
+            return;
+        }
+    }
+}
 
 void burnProgram(unsigned pgmIx, uint32_t start) {
     char s[50];
     if (pgmIx < (sizeof(programs) / sizeof(*programs))) {
         const uint8_t * pgmData = programs[pgmIx].data;
         size_t pgmLen = programs[pgmIx].len;
+
+        if (pgmData == pgmFastCount) {
+            // Special case
+            burnFastCount();
+        }
         sprintf(s, "Burning program %u at %04x len=%u", pgmIx, unsigned(start), pgmLen);
         Serial.println(s);
         hw.enable();

@@ -157,11 +157,14 @@ def makeInstructionDetails(filename):
         # Write a detailed description of each instruction
         for name in sorted(instructions):
             gi = instructions[name]
+            carry = gi.carry if gi.carry else 'unchanged'
+            zero = gi.zero if gi.zero else 'unchanged'
+
             f.write('## ' + gi.name + '\n\n')
-            f.write(gi.description + '\n\n')
+            f.write("**{}**\n\n".format(gi.description))
             f.write(gi.text + '\n\n')
-            f.write('**Carry Flag:** ' + gi.carry + '\n\n')
-            f.write('**Zero Flag:** ' + gi.zero + '\n\n')
+            f.write('**Carry Flag:** ' + carry + '\n\n')
+            f.write('**Zero Flag:** ' + zero + '\n\n')
             f.write('|Name|Opcode|Bytes|Cycles|\n')
             f.write(':--- |:---: |:---:|:---: |\n')
             f.write("|{}|{}|{}|{}|\n".format(gi.name, gi.opcode, gi.bytes, gi.cycles))

@@ -7,18 +7,18 @@ SAM,0x04,store A to memory,2,5,,,Store A to memory at the address specified by t
 TAS,0x05,transfer A to SP,1,3,,,Transfer A to the SP register.  A is unchanged.
 TSA,0x06,transfer SP to A,1,3,,,Transfer the value of the SP register to A.  SP is unchanged.
 INA,0x07,increment A,1,4,set if wrap to zero,set if wrap to zero,Increment A.
-DCA,0x08,decrement A,1,4,set if wrap past zero,set if wrap to zero,Decrement A.
+DCA,0x08,decrement A,1,4,clear if wrap past zero,set if A decremented to zero,Decrement A.
 NOT,0x09,NOT A,1,4,undetermined,set if zero,"Replace A with the logical NOT of A, meaning that all zero bits become one and all one bits become zero."
 ASL,0x0a,arithmetic shift left A,1,4,set if A overflows,set if zero,Shift A one position left.  Least significant bit of A takes the value of the Carry flag and the Carry Flag is set with the most significant bit of A.
-TST,0x0b,test A,1,4,set if A is negative,set if A is zero,Test A for sign and zero.  Carry flag becomes a minus flag (A<0) and zero flag indicates A=0.
-CLF,0x0c,clear carry and zero flags,1,3,clear,set,Clear carry flag.  Zero flag is set.
-SEF,0x0d,set carry and zero flags,1,3,set,clear,Set carry flag. Zero flag is cleared.
+TST,0x0b,test A,1,4,set if A is negative,set if A is zero,Test A for sign and zero.  Carry flag becomes a minus flag (A<0). The Zero flag is set if A=0.
+CLF,0x0c,clear carry and zero flags,1,4,clear,clear,Clear carry and zero flags.
+SEF,0x0d,set carry and zero flags,1,4,set,set,Set carry and zero flags.
 JMP,0x10,jump unconditional,2,4,,,Jump to address argument
 JC,0x11,jump on Carry,2,4,,,Jump to address argument if Carry flag set
 JZ,0x12,jump on Zero,2,4,,,Jump to address argument if Zero  flag set
 JNC,0x13,jump on no Carry,2,4,,,Jump to address argument if Carry flag clear
 JNZ,0x14,jump on no Zero,2,4,,,Jump to address argument if Zero  flag clear
-PHA,0x15,push A,1,4,,,Push processor status (flags) on to the stack.  SP is decremented.
+PHA,0x15,push A,1,5,,,Push processor status (flags) on to the stack.  SP is decremented.
 PLA,0x16,pull A,1,5,,,Pull accumulator from the stack.  SP is incremented.
 JSR,0x17,jump to subroutine,2,7,,,Jump to subroutine at address argument.  PC is stored on the stack and SP is decremented.
 RTS,0x18,return from subroutine,1,5,,,Return from subroutine.  PC is pulled from the stack and SP is incremented.

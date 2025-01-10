@@ -29,7 +29,7 @@ then start at zero and grow upward.
 
 ## ACI
 
-add immediate to A with carry
+**add immediate to A with carry**
 
 Add A to immediate value and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1.
 
@@ -43,7 +43,7 @@ Add A to immediate value and store the result in A.  The Carry flag value is inc
 
 ## ACM
 
-add memory to A with carry
+**add memory to A with carry**
 
 Add A to value in data memory at the address argument and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1.
 
@@ -57,7 +57,7 @@ Add A to value in data memory at the address argument and store the result in A.
 
 ## ADI
 
-add  immediate to A
+**add  immediate to A**
 
 Add A to immediate value and store the result in A.  The Carry flag value is not used in the addition.
 
@@ -71,7 +71,7 @@ Add A to immediate value and store the result in A.  The Carry flag value is not
 
 ## ADM
 
-add memory to A
+**add memory to A**
 
 Add A to value  in data memory at the address argument and store the result in A.  The Carry flag value is not used in the addition.
 
@@ -85,7 +85,7 @@ Add A to value  in data memory at the address argument and store the result in A
 
 ## ASL
 
-arithmetic shift left A
+**arithmetic shift left A**
 
 Shift A one position left.  Least significant bit of A takes the value of the Carry flag and the Carry Flag is set with the most significant bit of A.
 
@@ -99,21 +99,21 @@ Shift A one position left.  Least significant bit of A takes the value of the Ca
 
 ## CLF
 
-clear carry and zero flags
+**clear carry and zero flags**
 
-Clear carry flag.  Zero flag is set.
+Clear carry and zero flags.
 
 **Carry Flag:** clear
 
-**Zero Flag:** set
+**Zero Flag:** clear
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|CLF|0x0c|1|3|
+|CLF|0x0c|1|4|
 
 ## CPI
 
-compare immediate to A
+**compare immediate to A**
 
 Compare A to immediate value in the next byte of program memory.  Carry flag is set if A<value and Zero flag is set if A=value.  The value of A is not changed.
 
@@ -127,7 +127,7 @@ Compare A to immediate value in the next byte of program memory.  Carry flag is 
 
 ## CPM
 
-compare memory to A
+**compare memory to A**
 
 Compare A to the value in data memory addressed by  the next byte of program memory.  Carry flag is set if A<value and Zero flag is set if A=value.  The value of A is not changed.
 
@@ -141,13 +141,13 @@ Compare A to the value in data memory addressed by  the next byte of program mem
 
 ## DCA
 
-decrement A
+**decrement A**
 
 Decrement A.
 
-**Carry Flag:** set if wrap past zero
+**Carry Flag:** clear if wrap past zero
 
-**Zero Flag:** set if wrap to zero
+**Zero Flag:** set if A decremented to zero
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -155,7 +155,7 @@ Decrement A.
 
 ## INA
 
-increment A
+**increment A**
 
 Increment A.
 
@@ -169,13 +169,13 @@ Increment A.
 
 ## JC
 
-jump on Carry
+**jump on Carry**
 
 Jump to address argument if Carry flag set
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -183,13 +183,13 @@ Jump to address argument if Carry flag set
 
 ## JMP
 
-jump unconditional
+**jump unconditional**
 
 Jump to address argument
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -197,13 +197,13 @@ Jump to address argument
 
 ## JNC
 
-jump on no Carry
+**jump on no Carry**
 
 Jump to address argument if Carry flag clear
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -211,13 +211,13 @@ Jump to address argument if Carry flag clear
 
 ## JNZ
 
-jump on no Zero
+**jump on no Zero**
 
 Jump to address argument if Zero  flag clear
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -225,13 +225,13 @@ Jump to address argument if Zero  flag clear
 
 ## JSR
 
-jump to subroutine
+**jump to subroutine**
 
 Jump to subroutine at address argument.  PC is stored on the stack and SP is decremented.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -239,13 +239,13 @@ Jump to subroutine at address argument.  PC is stored on the stack and SP is dec
 
 ## JZ
 
-jump on Zero
+**jump on Zero**
 
 Jump to address argument if Zero  flag set
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -253,13 +253,13 @@ Jump to address argument if Zero  flag set
 
 ## LAI
 
-load A immediate
+**load A immediate**
 
 Load A with immediate value stored in the next byte in program memory.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -267,13 +267,13 @@ Load A with immediate value stored in the next byte in program memory.
 
 ## LAM
 
-load A from memory
+**load A from memory**
 
 Load A with the value from memory address specified by the next byte in program memory.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -281,13 +281,13 @@ Load A with the value from memory address specified by the next byte in program 
 
 ## NOP
 
-no operation
+**no operation**
 
 No operation is performed.  Data registers and flags are unchanged.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -295,7 +295,7 @@ No operation is performed.  Data registers and flags are unchanged.
 
 ## NOT
 
-NOT A
+**NOT A**
 
 Replace A with the logical NOT of A, meaning that all zero bits become one and all one bits become zero.
 
@@ -309,13 +309,13 @@ Replace A with the logical NOT of A, meaning that all zero bits become one and a
 
 ## OUT
 
-output A
+**output A**
 
 Store A in the Output Register for display.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -323,27 +323,27 @@ Store A in the Output Register for display.
 
 ## PHA
 
-push A
+**push A**
 
 Push processor status (flags) on to the stack.  SP is decremented.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|PHA|0x15|1|4|
+|PHA|0x15|1|5|
 
 ## PLA
 
-pull A
+**pull A**
 
 Pull accumulator from the stack.  SP is incremented.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -351,13 +351,13 @@ Pull accumulator from the stack.  SP is incremented.
 
 ## RC
 
-return if carry
+**return if carry**
 
 Return from subroutine if Carry flag is set else no operation.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -365,13 +365,13 @@ Return from subroutine if Carry flag is set else no operation.
 
 ## RNC
 
-return if not carry
+**return if not carry**
 
 Return from subroutine if Carry flag is not set else no operation.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -379,13 +379,13 @@ Return from subroutine if Carry flag is not set else no operation.
 
 ## RNZ
 
-return if not zero
+**return if not zero**
 
 Return from subroutine if Zero flag is not set else no operation.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -393,13 +393,13 @@ Return from subroutine if Zero flag is not set else no operation.
 
 ## RTS
 
-return from subroutine
+**return from subroutine**
 
 Return from subroutine.  PC is pulled from the stack and SP is incremented.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -407,13 +407,13 @@ Return from subroutine.  PC is pulled from the stack and SP is incremented.
 
 ## RZ
 
-return if zero
+**return if zero**
 
 Return from subroutine if Zero flag is set else no operation.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -421,13 +421,13 @@ Return from subroutine if Zero flag is set else no operation.
 
 ## SAM
 
-store A to memory
+**store A to memory**
 
 Store A to memory at the address specified by the next byte in program memory.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -435,7 +435,7 @@ Store A to memory at the address specified by the next byte in program memory.
 
 ## SBI
 
-subtract immediate from A
+**subtract immediate from A**
 
 Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
 
@@ -449,7 +449,7 @@ Subtract  immediate value from A and store the result in A.  The Carry flag valu
 
 ## SBM
 
-subtract memory from A
+**subtract memory from A**
 
 Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the addition.
 
@@ -463,7 +463,7 @@ Subtract  value in data memory at the address argument from A and store the resu
 
 ## SCI
 
-subtract immediate from A with borrow
+**subtract immediate from A with borrow**
 
 Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
 
@@ -477,7 +477,7 @@ Subtract  immediate value from A and store the result in A.  The Carry flag valu
 
 ## SCM
 
-subtract memory from A with borrow
+**subtract memory from A with borrow**
 
 Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the addition.
 
@@ -491,27 +491,27 @@ Subtract  value in data memory at the address argument from A and store the resu
 
 ## SEF
 
-set carry and zero flags
+**set carry and zero flags**
 
-Set carry flag. Zero flag is cleared.
+Set carry and zero flags.
 
 **Carry Flag:** set
 
-**Zero Flag:** clear
+**Zero Flag:** set
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
-|SEF|0x0d|1|3|
+|SEF|0x0d|1|4|
 
 ## TAS
 
-transfer A to SP
+**transfer A to SP**
 
 Transfer A to the SP register.  A is unchanged.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -519,13 +519,13 @@ Transfer A to the SP register.  A is unchanged.
 
 ## TSA
 
-transfer SP to A
+**transfer SP to A**
 
 Transfer the value of the SP register to A.  SP is unchanged.
 
-**Carry Flag:** 
+**Carry Flag:** unchanged
 
-**Zero Flag:** 
+**Zero Flag:** unchanged
 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
@@ -533,9 +533,9 @@ Transfer the value of the SP register to A.  SP is unchanged.
 
 ## TST
 
-test A
+**test A**
 
-Test A for sign and zero.  Carry flag becomes a minus flag (A<0) and zero flag indicates A=0.
+Test A for sign and zero.  Carry flag becomes a minus flag (A<0). The Zero flag is set if A=0.
 
 **Carry Flag:** set if A is negative
 
@@ -546,4 +546,4 @@ Test A for sign and zero.  Carry flag becomes a minus flag (A<0) and zero flag i
 |TST|0x0b|1|4|
 
 
-*this file was generated by sap-plus-instructions.py at 27-Nov-2024 21:17:05*
+*this file was generated by sap-plus-instructions.py at 09-Jan-2025 22:37:34*
