@@ -33,8 +33,8 @@ enum {
     N_SBM = 0x23,  //   subtract memory from A
     N_ACI = 0x24,  //   add immediate to A with carry
     N_ACM = 0x25,  //   add memory to A with carry
-    N_SCI = 0x26,  //   subtract immediate from A with borrow
-    N_SCM = 0x27,  //   subtract memory from A with borrow
+    N_SCI = 0x26,  //   subtract immediate from A with carry
+    N_SCM = 0x27,  //   subtract memory from A with carry
     N_CPI = 0x28,  //   compare immediate to A
     N_CPM = 0x29,  //   compare memory to A
 };
