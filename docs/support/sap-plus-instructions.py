@@ -207,3 +207,7 @@ makeOpcodes('in-opcodes.cpp')
 makeInstructionSummaries('../_docs/in-10-summary.md')
 makeInstructionDetails('../_docs/in-20-details.md')
 print("opcodes={}: implemented={}, wip={}".format(len(opcodes), len(opcodes) - wip, wip))
+
+# print a dictionary for the assembler
+d={x:instructions[x].opcode[-2:] for x in instructions}
+#print(d)
