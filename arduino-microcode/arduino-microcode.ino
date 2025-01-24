@@ -1,6 +1,6 @@
 #include "Arduino.h"
 
-static const char * MY_VERSION = "1.2";
+static const char * MY_VERSION = "1.3";
 
 // IO lines for the EEPROM device control
 // Pins D2..D9 are used for the data bus.
@@ -208,7 +208,8 @@ enum {
     N_SCI = 0x26,  //   subtract immediate from A with borrow
     N_SCM = 0x27,  //   subtract memory from A with borrow
     N_CPI = 0x28,  //   compare immediate to A
-    N_CPM = 0x29   //   compare memory to A
+    N_CPM = 0x29,  //   compare memory to A
+    N_CYN = 0x3f   //   can you not
 };
 
 
@@ -272,14 +273,14 @@ const template_t template0 PROGMEM = {
   { FAA,        RRC|WP|N,   0,          0,          0,          0,          0,          0    }, // 12 N_JZ    4
   { FAA,        RRC|WP|N,   0,          0,          0,          0,          0,          0    }, // 13 N_JNC   4
   { FAA,        RRC|WP|N,   0,          0,          0,          0,          0,          0    }, // 14 N_JNZ   4
-  { RS|WM,      RA|WRS,     SPI|N,      0,          0,          0,          0,          0    }, // 15 N_PHA   4
-  { SPD,        RS|WM,      RRS|WA|N,   0,          0,          0,          0,          0    }, // 16 N_PLA   5
-  { FAA,        RRC|WB,     RS|WM,      RP|WRS,     RB|WP|SPI|N,     0,     0,          0    }, // 17 N_JSR   7
-  { SPD,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 18 N_RTS   5
-  { SPD,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 19 N_RC    5
-  { SPD,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 20 N_RZ    5
-  { SPD,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 21 N_RNC   5
-  { SPD,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 22 N_RNZ   5
+  { RS|WM,      RA|WRS,     SPD|N,      0,          0,          0,          0,          0    }, // 15 N_PHA   4
+  { SPI,        RS|WM,      RRS|WA|N,   0,          0,          0,          0,          0    }, // 16 N_PLA   5
+  { FAA,        RRC|WB,     RS|WM,      RP|WRS,     RB|WP|SPD|N,     0,     0,          0    }, // 17 N_JSR   7
+  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 18 N_RTS   5
+  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 19 N_RC    5
+  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 20 N_RZ    5
+  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 21 N_RNC   5
+  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 22 N_RNZ   5
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 1d
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 1e
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 1f
@@ -316,7 +317,7 @@ const template_t template0 PROGMEM = {
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 3c
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 3d
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 3e
-  { 0,          0,          0,          0,          0,          0,          0,          0    }  // 3f
+  { RA|WB,      RB|WA|BI,   RA|WB,      RB|WA|BI,   RA|WB,      RB|WA|BI,   RA|WB,      RB|WA|BI }, // 3f N_CYN   16
 };
 
 // A buffer to hold the microinstruction words (steps) for an instruction that have been
@@ -346,11 +347,18 @@ uint16_t makeAddress(uint16_t rom, uint16_t flags=0, uint16_t instr=0, uint16_t 
 
 void buildInstruction(unsigned opcode, unsigned flags) {
     // Initialize the code buffer from a template.
+    // The first steps to load the IR must be identical for all instructions and are
+    // hard-coded here.
     code[0] = F1;            // Fetch instruction from memory
     code[1] = F2;            // Opcode into IR
+
+    // The next eight steps come from the table and all remaining steps are defaulted to zeros.
     memcpy_P(code + 2, template0[opcode], NUM_TEMPLATE_STEPS*2);
     code[10] = code[11] = code[12] = code[13] = code[14] = code[15] = 0;
 
+    // The code below makes instruction-specific modifications to the microcode.  This is usually
+    // done to create variations based on the state of the flags, but it can also be used in the
+    // rare case that an instruction needs more than ten steps.
     bool skipJmp = false;
     bool skipRts = false;
     switch (opcode) {
@@ -380,6 +388,15 @@ void buildInstruction(unsigned opcode, unsigned flags) {
         case N_RZ:    skipRts = ((flags & FL_Z) == 0);      break;
         case N_RNZ:   skipRts = ((flags & FL_C) != 0);      break;
         case N_RNC:   skipRts = ((flags & FL_Z) != 0);      break;
+
+        case N_CYN:
+            // Example of an instruction with more than ten steps.
+            // The steps in code[0..1] are hard-coded for all instructions,
+            // code[2..9] are filled in from the table and the remaining
+            // steps code[10..15] are created here.
+            code[10] = code[12] = code[14] = RA|WB;
+            code[11] = code[13] = code[15] = RB|WA|BI;
+            break;
     }
 
     // Conditional jump instructions are coded by default as JMP instructions.

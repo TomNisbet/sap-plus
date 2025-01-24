@@ -18,10 +18,10 @@ JC,0x11,jump on Carry,2,4,,,Jump to address argument if Carry flag set
 JZ,0x12,jump on Zero,2,4,,,Jump to address argument if Zero  flag set
 JNC,0x13,jump on no Carry,2,4,,,Jump to address argument if Carry flag clear
 JNZ,0x14,jump on no Zero,2,4,,,Jump to address argument if Zero  flag clear
-PHA,0x15,push A,1,5,,,Push processor status (flags) on to the stack.  SP is decremented.
-PLA,0x16,pull A,1,5,,,Pull accumulator from the stack.  SP is incremented.
-JSR,0x17,jump to subroutine,2,7,,,Jump to subroutine at address argument.  PC is stored on the stack and SP is decremented.
-RTS,0x18,return from subroutine,1,5,,,Return from subroutine.  PC is pulled from the stack and SP is incremented.
+PHA,0x15,push A,1,5,,,Push accumulator onto to the stack.  The value of A is first written to the RAM location pointed to by SP and then SP is decremented.
+PLA,0x16,pull A,1,5,,,Pull accumulator from the stack.  SP is incremented and then the value for A is read from RAM at the new SP location.
+JSR,0x17,jump to subroutine,2,7,,,Jump to subroutine at address argument.  PC is stored on the stack and then SP is decremented.
+RTS,0x18,return from subroutine,1,5,,,Return from subroutine.  SP is incremented and then PC is read from RAM at the new SP location.
 RC,0x19,return if carry,1,5,,,Return from subroutine if Carry flag is set else no operation.
 RZ,0x1a,return if zero,1,5,,,Return from subroutine if Zero flag is set else no operation.
 RNC,0x1b,return if not carry,1,5,,,Return from subroutine if Carry flag is not set else no operation.
@@ -36,3 +36,4 @@ SCI,0x26,subtract immediate from A with carry,2,5,clear if A underflows,set if z
 SCM,0x27,subtract memory from A with carry,2,6,clear if A underflows,set if zero,"Subtract  value in data memory at the address argument from A and store the result in A.   The Carry flag is included in the subtraction.  If Carry is clear, the value in A will be A-value-1."
 CPI,0x28,compare immediate to A,2,5,clear if A < value,set if equal,Compare A to immediate value in the next byte of program memory.  Carry flag is clear if A<value and Zero flag is set if A=value.  The value of A is not changed.
 CPM,0x29,compare memory to A,2,6,clear if A < value,set if equal,Compare A to the value in data memory addressed by  the next byte of program memory.  Carry flag is clear if A<value and Zero flag is set if A=value.  The value of A is not changed.
+CYN,0x3f,can you not,1,16,,,"Toggles A between its original value and NOT A.  The value is swapped seven times, so the final value is NOT A at the end of the instruction.  Because A toggles between two values, this can be used to create a noticable visual indicator for a spin loop when a program completes.  Useful starting values for A are 0x55, 0xf0, or 0xcc. "

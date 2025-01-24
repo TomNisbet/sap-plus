@@ -37,4 +37,5 @@ enum {
     N_SCM = 0x27,  //   subtract memory from A with carry
     N_CPI = 0x28,  //   compare immediate to A
     N_CPM = 0x29,  //   compare memory to A
+    N_CYN = 0x3f,  //   can you not
 };
