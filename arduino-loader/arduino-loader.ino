@@ -616,6 +616,29 @@ byte parseCommand(char c) {
     return cmd;
 }
 
+void usage() {
+    Serial.print(F("SAP-Plus Loader/Debugger "));
+    Serial.println(MY_VERSION);
+    Serial.println(F("RAM commands:"));
+    Serial.println(F("  Dss ee    - Dump bytes from RAM to terminal"));
+    Serial.println(F("  Fss ee dd - Fill block of RAM with fixed value"));
+    Serial.println(F("  Iss dd .. - Insert one or more values into RAM"));
+    Serial.println(F("  Xss       - eXamine (and optionally modify) RAM"));
+
+    Serial.println(F("\nRegister and hardware commands:"));
+    Serial.println(F("  Ccc       - Set control bits to cc (0..3f)"));
+    Serial.println(F("  Gr        - Get (read) and print register value"));
+    Serial.println(F("  Pr dd     - Put (write) value to register"));
+    Serial.println(F("  =r1 r2    - Assign (r1=r2) copy value from register r2 to r1"));
+    Serial.println(F("  Y[cc]     - cYcle host hardware clock (with optional repeat count)"));
+
+    Serial.println(F("\nMisc commands:"));
+    Serial.println(F("  L         - List built-in program numbers and names"));
+    Serial.println(F("  N         - Print register numbers and names"));
+    Serial.println(F("  T         - Test host hardware"));
+    Serial.println(F("  Zpp ss    - Zap (burn) stored program number pp to start address ss"));
+    Serial.println(F("  Q         - Quit loader mode and return control to host"));
+}
 
 void processCommand() {
     char line[60];
@@ -729,27 +752,7 @@ void processCommand() {
         break;
 
     default:
-        Serial.print(F("SAP-Plus Loader/Debugger "));
-        Serial.println(MY_VERSION);
-        Serial.println(F("RAM commands:"));
-        Serial.println(F("  Dss ee    - Dump bytes from RAM to terminal"));
-        Serial.println(F("  Fss ee dd - Fill block of RAM with fixed value"));
-        Serial.println(F("  Iss dd .. - Insert one or more values into RAM"));
-        Serial.println(F("  Xss       - eXamine (and optionally modify) RAM"));
-
-        Serial.println(F("\nRegister and hardware commands:"));
-        Serial.println(F("  Ccc       - Set control bits to cc (0..3f)"));
-        Serial.println(F("  Gr        - Get (read) and print register value"));
-        Serial.println(F("  Pr dd     - Put (write) value to register"));
-        Serial.println(F("  =r1 r2    - Assign (r1=r2) copy value from register r2 to r1"));
-        Serial.println(F("  Y[cc]     - cYcle host hardware clock (with optional repeat count)"));
-
-        Serial.println(F("\nMisc commands:"));
-        Serial.println(F("  L         - List built-in program numbers and names"));
-        Serial.println(F("  N         - Print register numbers and names"));
-        Serial.println(F("  T         - Test host hardware"));
-        Serial.println(F("  Zpp ss    - Zap (burn) stored program number pp to start address ss"));
-        Serial.println(F("  Q         - Quit loader mode and return control to host"));
+        usage();
         break;
     }
 }
