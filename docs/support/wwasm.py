@@ -3,7 +3,7 @@
 
 import argparse
 
-__version__="1.1"
+__version__="1.2"
 
 parser = argparse.ArgumentParser("World's Worst Assembler")
 parser.add_argument('-c', '--code', action='store_true', help="write C code for Arduino Loader")
@@ -28,23 +28,16 @@ def assemble(pass2):
     lineNum = 0
     with open(args.filename, 'r') as asmFile:
         for line in asmFile:
+            printLine = line.rstrip()
             lineNum += 1
-            outLine = None
-            listLine = None
             label = None
-            printLabel = ""
-            comment = None
-            if len(line.strip()) == 0:
-                # preserve empty lines in list file
-                listLine = ""
+            cppBytes =  ""
+            listBytes = ""
+            lineAddr = "  "
+
             ix = line.find(';')
             if ix >= 0:
-                comment = line[ix+1:].rstrip()
                 line = line[:ix]
-                if pass2 and not len(line.strip()):
-                    # line contains only a comment
-                    outLine = "//{}".format(comment)
-                    listLine = ";{}".format(comment)
 
             parts = line.split()
             if parts:
@@ -52,10 +45,8 @@ def assemble(pass2):
                     # Special case because the label in an EQU does not have a colon.  The later
                     # command processing code will add the value to the labels table
                     label = parts.pop(0).upper()
-                    printLabel = label
                 elif parts[0][-1] == ':':
                     label = parts.pop(0)[0:-1].upper()
-                    printLabel = label+':'
                     if not pass2:
                         # store label in the table if pass 1
                         labels[label] = code if isCode else data
@@ -75,8 +66,7 @@ def assemble(pass2):
                 #if asmPass == 1:
                 #    print("label={} op={} arg={}".format(label, op, arg))
                 if not op:
-                    if printLabel:
-                        listLine = "           {}".format(printLabel)
+                    pass
                 elif op == 'DATA':
                     isCode = False
                     data = argVal if arg else data
@@ -87,36 +77,36 @@ def assemble(pass2):
                     mem[memAddr] = []
                 elif op == 'EQU':
                     labels[label] = argVal
-                    listLine = "{:02X}          {:8}{:8} {}".format(argVal, printLabel, op, arg)
+                    lineAddr = "{:02x}".format(argVal)
                 elif op == 'BYTE':
                     if isCode:
-                        listLine = "{:02X}:         {:8}{:8}".format(code, printLabel, op)
+                        lineAddr = "{:02x}".format(code)
                         code += 1
                     else:
-                        listLine = "{:02X}:         {:8}{:8}".format(data, printLabel, op)
+                        lineAddr = "{:02x}".format(data)
                         data += 1
                 else:
-                    h = ins[op]
+                    h = ins.get(op)
+                    if not h:
+                        print("ERROR: op not found - ".format(op))
                     mem[memAddr].append(h) 
+                    lineAddr = "{:02x}".format(code)
                     if arg:
-                        outLine = "    N_{:8} {},".format(op+',', hex(argVal))
-                        listLine = "{:02X}: {} {:02X}   {:8}{:8} {}".format(code, h, argVal, printLabel, op, arg)
+                        cppBytes = "0x{}, 0x{:02x},".format(h, argVal)
+                        listBytes = "{} {:02x}".format(h, argVal)
                         mem[memAddr].append(format(argVal, '02X')) 
                         code += 2
                     else:
-                        outLine = "    N_{},".format(op)
-                        listLine = "{:02X}: {}      {:8}{:8}".format(code, h, printLabel, op)
+                        cppBytes = "0x{},".format(h)
+                        listBytes = "{}".format(h)
                         code += 1
 
-            if outLine and args.code and pass2:
-                if comment:
-                    outLine = "{:24}//{}".format(outLine, comment)
-                print(outLine)
+            if args.code and pass2:
+                print("  {:12}// {} {}".format(cppBytes, lineAddr, printLine))
 
-            if listLine != None and args.list and pass2:
-                if comment:
-                    listLine = "{:36};{}".format(listLine, comment)
-                print(listLine)
+            if args.list and pass2:
+                sep = '  ' if lineAddr[0] == ' ' else ': '
+                print("{}{}{:8}{}".format(lineAddr, sep, listBytes, printLine))
 
 
 def printMem(mem):
@@ -135,4 +125,3 @@ assemble(True)
 #print(labels)
 if args.monitor:
     printMem(mem)
-

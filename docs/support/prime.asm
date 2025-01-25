@@ -2,7 +2,6 @@
 ; compute NUM/2, but can do DIV*2 instead and compare to NUM.  For example, there is no need to test
 ; past 11 to know that 23 is prime.  No reason to divide by 13, 17, and 19.
 
-x123    equ      222
         data
 NUM:    byte            ; number value to be tested for prime
 DIV:    byte            ; current divisor value for prime test
@@ -69,4 +68,3 @@ SPIN:
 SPIN2:
         cyn
         jmp     SPIN2
-

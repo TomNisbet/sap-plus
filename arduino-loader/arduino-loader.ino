@@ -4,7 +4,7 @@
 #include "CmdStatus.h"
 #include "LoaderHw.h"
 
-static const char * MY_VERSION = "1.0";
+static const char * MY_VERSION = "2.0";
 
 // Global loader hardware interface
 LoaderHw hw;
@@ -102,39 +102,72 @@ static const uint8_t pgmCount3[] = {
 };
 
 static const uint8_t pgmStack1[] = {
-    N_LAI, 0xff,
-    N_TAS,
-    N_LAI, 0,    // Test stack - load value to A and push, change A, pop
-// LOOP
-    N_OUT,
-    N_PHA,
-    N_ACI, 3,
-    N_OUT,
-    N_PLA,
-    N_OUT,
-    N_INA,
-    N_JMP, 0x05
+              //    ; Test the stack using the PHA/PLA and JSR/RTS instructions
+              //
+              // ff STKTOP  equ     0xff
+              // 0a N       equ     10
+              //
+  0x02, 0xff, // 00         lai     STKTOP  ; initialize the stack to the top of memory
+  0x05,       // 02         tas
+  0x02, 0x00, // 03         lai     0       ; Test stack - load value to A and push, change A, pop
+              //
+              //    LOOP:
+  0x01,       // 05         out             ; output and save A
+  0x15,       // 06         pha
+  0x17, 0x18, // 07         jsr     ADDN    ; output and save A+N
+  0x15,       // 09         pha
+  0x17, 0x18, // 0a         jsr     ADDN    ; output and save A+2N
+  0x15,       // 0c         pha
+  0x17, 0x18, // 0d         jsr     ADDN    ; output A+3N
+  0x16,       // 0f         pla
+  0x01,       // 10         out             ; restore and output A+2N
+  0x16,       // 11         pla
+  0x01,       // 12         out             ; restore and output A+N
+  0x16,       // 13         pla
+  0x01,       // 14         out             ; restore and output A
+  0x07,       // 15         ina             ; increment A and repeat the pattern
+  0x10, 0x05, // 16         jmp     LOOP
+              //
+              //    ADDN:   ; Add N to A and output the new value
+  0x20, 0x0a, // 18         adi     N
+  0x01,       // 1a         out
+  0x18        // 1b         rts
 };
 
-static const uint8_t pgmPattern[] = {
-    // Memory test pattern - not an executable program
-    'A',  'B',  'C',  'D',  'E',  'F',  'G',  'H',
-    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80,
-    0x7f, 0xbf, 0xdf, 0xef, 0xf7, 0xfb, 0xfd, 0xfe,
-    0x00, 0xff, 0x55, 0xaa, '0',  '1',  '2',  '3'
+static const uint8_t pgmFib[] = {
+              //            data
+              // 00 NUM1:   byte
+              // 01 NUM2:   byte
+              //
+              //            code
+              //    START:
+  0x02, 0x01, // 00         lai     1
+  0x04, 0x00, // 02         sam     NUM1
+  0x01,       // 04         out
+              //    LOOP:
+  0x04, 0x01, // 05         sam     NUM2
+  0x01,       // 07         out
+  0x21, 0x00, // 08         adm     NUM1
+  0x11, 0x00, // 0a         jc      START
+  0x04, 0x00, // 0c         sam     NUM1
+  0x01,       // 0e         out
+  0x21, 0x01, // 0f         adm     NUM2
+  0x11, 0x00, // 11         jc      START
+  0x10, 0x05  // 13         jmp     LOOP
 };
 
 struct program_t {
     const uint8_t * data;
     size_t          len;
+    const char *    name;
 };
 static const program_t programs[] = {
-    pgmPattern,     sizeof(pgmPattern),
-    pgmSimple,      sizeof(pgmSimple),
-    pgmFastCount,   0,
-    pgmShift,       sizeof(pgmShift),
-    pgmCount3,      sizeof(pgmCount3),
-    pgmStack1,      sizeof(pgmStack1)
+    pgmSimple,      sizeof(pgmSimple),    "Simple",
+    pgmFastCount,   0,                    "Fast Count",
+    pgmShift,       sizeof(pgmShift),     "Shift",
+    pgmFib,         sizeof(pgmFib),       "Fibbonacci",
+    pgmCount3,      sizeof(pgmCount3),    "Count by 3",
+    pgmStack1,      sizeof(pgmStack1),    "Stack Test"
 };
 
 
@@ -525,6 +558,7 @@ enum {
     CMD_FILL,
     CMD_INSERT,
     CMD_GET,
+    CMD_LIST,
     CMD_NAMES,
     CMD_PUT,
     CMD_QUIT,
@@ -565,6 +599,7 @@ byte parseCommand(char c) {
         case 'f':  cmd = CMD_FILL;      break;
         case 'g':  cmd = CMD_GET;       break;
         case 'i':  cmd = CMD_INSERT;    break;
+        case 'l':  cmd = CMD_LIST;      break;
         case 'n':  cmd = CMD_NAMES;     break;
         case 'p':  cmd = CMD_PUT;       break;
         case 'q':  cmd = CMD_QUIT;      break;
@@ -628,6 +663,16 @@ void processCommand() {
 
     case CMD_INSERT:
         insertBytes(line + 1);
+        break;
+
+    case CMD_LIST:
+        int n = sizeof(programs) / sizeof(*programs);
+        for (int ix = 0; (ix < n); ix++) {
+            Serial.print(ix);
+            Serial.print(" - ");
+            Serial.println(programs[ix].name);
+        }
+
         break;
 
     case CMD_EXAMINE:
@@ -700,9 +745,10 @@ void processCommand() {
         Serial.println(F("  Y[cc]     - cYcle host hardware clock (with optional repeat count)"));
 
         Serial.println(F("\nMisc commands:"));
-        Serial.println(F("  T         - Test host hardware"));
+        Serial.println(F("  L         - List built-in program numbers and names"));
         Serial.println(F("  N         - Print register numbers and names"));
-        Serial.println(F("  Zpp ss    - Zap (burn) and verify a stored program"));
+        Serial.println(F("  T         - Test host hardware"));
+        Serial.println(F("  Zpp ss    - Zap (burn) stored program number pp to start address ss"));
         Serial.println(F("  Q         - Quit loader mode and return control to host"));
         break;
     }
