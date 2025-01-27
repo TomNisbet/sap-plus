@@ -22,10 +22,12 @@ then start at zero and grow upward.
 |           |           |           |           |           |           |           |           |
 |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |:---:      |
 |[ACI](#aci)|[ACM](#acm)|[ADI](#adi)|[ADM](#adm)|[ASL](#asl)|[CLF](#clf)|[CPI](#cpi)|[CPM](#cpm)|
-|[CYN](#cyn)|[DCA](#dca)|[INA](#ina)|[JC](#jc)|[JMP](#jmp)|[JNC](#jnc)|[JNZ](#jnz)|[JSR](#jsr)|
-|[JZ](#jz)|[LAI](#lai)|[LAM](#lam)|[NOP](#nop)|[NOT](#not)|[OUT](#out)|[PHA](#pha)|[PLA](#pla)|
-|[RC](#rc)|[RNC](#rnc)|[RNZ](#rnz)|[RTS](#rts)|[RZ](#rz)|[SAM](#sam)|[SBI](#sbi)|[SBM](#sbm)|
-|[SCI](#sci)|[SCM](#scm)|[SEF](#sef)|[TAS](#tas)|[TSA](#tsa)|[TST](#tst)|
+|[CYN](#cyn)|[DCA](#dca)|[DCS](#dcs)|[INA](#ina)|[INS](#ins)|[JC](#jc)|[JEQ](#jz)|[JGE](#jnc)|
+|[JLT](#jc)|[JMP](#jmp)|[JNC](#jnc)|[JNE](#jnz)|[JNZ](#jnz)|[JSR](#jsr)|[JZ](#jz)|[LAI](#lai)|
+|[LAM](#lam)|[LAX](#lax)|[NOP](#nop)|[NOT](#not)|[OUT](#out)|[PHA](#pha)|[PLA](#pla)|[RC](#rc)|
+|[REQ](#rz)|[RGE](#rnc)|[RLT](#rc)|[RNC](#rnc)|[RNE](#rnz)|[RNZ](#rnz)|[RTS](#rts)|[RZ](#rz)|
+|[SAM](#sam)|[SAX](#sax)|[SBI](#sbi)|[SBM](#sbm)|[SCI](#sci)|[SCM](#scm)|[SEF](#sef)|[TAS](#tas)|
+|[TSA](#tsa)|[TST](#tst)|
 
 ## ACI
 
@@ -167,6 +169,20 @@ Decrement A.
 :--- |:---: |:---:|:---: |
 |DCA|0x08|1|4|
 
+## DCS
+
+**decrement SP**
+
+Decrement the Stack Pointer.  Not needed for normal stack operation.  Manipulates SP when SP is used as an index register.
+
+**Carry Flag:** undetermined
+
+**Zero Flag:** set is SP is sero after decrement
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|DCS|0x1e|1|4|
+
 ## INA
 
 **increment A**
@@ -181,11 +197,27 @@ Increment A.
 :--- |:---: |:---:|:---: |
 |INA|0x07|1|4|
 
+## INS
+
+**increment SP**
+
+Increment the Stack Pointer.  Not needed for normal stack operation.  Manipulates SP when SP is used as an index register.
+
+**Carry Flag:** undetermined
+
+**Zero Flag:** set is SP is sero after increment
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|INS|0x1d|1|4|
+
 ## JC
 
 **jump on Carry**
 
 Jump to address argument if Carry flag set
+
+**Alias:** JLT - jump if less than
 
 **Carry Flag:** unchanged
 
@@ -215,6 +247,8 @@ Jump to address argument
 
 Jump to address argument if Carry flag clear
 
+**Alias:** JGE - jump if greater or equal
+
 **Carry Flag:** unchanged
 
 **Zero Flag:** unchanged
@@ -229,6 +263,8 @@ Jump to address argument if Carry flag clear
 
 Jump to address argument if Zero  flag clear
 
+**Alias:** JNE - jump if not equal
+
 **Carry Flag:** unchanged
 
 **Zero Flag:** unchanged
@@ -241,7 +277,7 @@ Jump to address argument if Zero  flag clear
 
 **jump to subroutine**
 
-Jump to subroutine at address argument.  PC is stored on the stack and SP is decremented.
+Jump to subroutine at address argument.  PC is stored on the stack and then SP is decremented.
 
 **Carry Flag:** unchanged
 
@@ -256,6 +292,8 @@ Jump to subroutine at address argument.  PC is stored on the stack and SP is dec
 **jump on Zero**
 
 Jump to address argument if Zero  flag set
+
+**Alias:** JEQ - jump if equal
 
 **Carry Flag:** unchanged
 
@@ -292,6 +330,20 @@ Load A with the value from memory address specified by the next byte in program 
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
 |LAM|0x03|2|5|
+
+## LAX
+
+**load A indexed by SP**
+
+Load A from memory indexed by SP. This is similar to a PLA operation except the value of SP is not changed.
+
+**Carry Flag:** unchanged
+
+**Zero Flag:** unchanged
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|LAX|0x0e|1|4|
 
 ## NOP
 
@@ -339,7 +391,7 @@ Store A in the Output Register for display.
 
 **push A**
 
-Push accumulator onto to the stack.  SP is decremented.
+Push accumulator onto to the stack.  The value of A is first written to the RAM location pointed to by SP and then SP is decremented.
 
 **Carry Flag:** unchanged
 
@@ -353,7 +405,7 @@ Push accumulator onto to the stack.  SP is decremented.
 
 **pull A**
 
-Pull accumulator from the stack.  SP is incremented.
+Pull accumulator from the stack.  SP is incremented and then the value for A is read from RAM at the new SP location.
 
 **Carry Flag:** unchanged
 
@@ -369,6 +421,8 @@ Pull accumulator from the stack.  SP is incremented.
 
 Return from subroutine if Carry flag is set else no operation.
 
+**Alias:** RLT - return if less than
+
 **Carry Flag:** unchanged
 
 **Zero Flag:** unchanged
@@ -382,6 +436,8 @@ Return from subroutine if Carry flag is set else no operation.
 **return if not carry**
 
 Return from subroutine if Carry flag is not set else no operation.
+
+**Alias:** RGE - return if greater or equal
 
 **Carry Flag:** unchanged
 
@@ -397,6 +453,8 @@ Return from subroutine if Carry flag is not set else no operation.
 
 Return from subroutine if Zero flag is not set else no operation.
 
+**Alias:** RNE - return if not equal
+
 **Carry Flag:** unchanged
 
 **Zero Flag:** unchanged
@@ -409,7 +467,7 @@ Return from subroutine if Zero flag is not set else no operation.
 
 **return from subroutine**
 
-Return from subroutine.  PC is pulled from the stack and SP is incremented.
+Return from subroutine.  SP is incremented and then PC is read from RAM at the new SP location.
 
 **Carry Flag:** unchanged
 
@@ -424,6 +482,8 @@ Return from subroutine.  PC is pulled from the stack and SP is incremented.
 **return if zero**
 
 Return from subroutine if Zero flag is set else no operation.
+
+**Alias:** REQ - return if equal
 
 **Carry Flag:** unchanged
 
@@ -446,6 +506,20 @@ Store A to memory at the address specified by the next byte in program memory.
 |Name|Opcode|Bytes|Cycles|
 :--- |:---: |:---:|:---: |
 |SAM|0x04|2|5|
+
+## SAX
+
+**store A indexed by SP**
+
+Store A to memory indexed by SP. This is similar to a PHA operation except the value of SP is not changed.
+
+**Carry Flag:** unchanged
+
+**Zero Flag:** unchanged
+
+|Name|Opcode|Bytes|Cycles|
+:--- |:---: |:---:|:---: |
+|SAX|0x0f|1|4|
 
 ## SBI
 
@@ -560,4 +634,4 @@ Test A for sign and zero.  Carry flag becomes a minus flag (A<0). The Zero flag 
 |TST|0x0b|1|4|
 
 
-*this file was generated by sap-plus-instructions.py at 22-Jan-2025 17:40:17*
+*this file was generated by sap-plus-instructions.py at 26-Jan-2025 20:40:47*

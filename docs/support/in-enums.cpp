@@ -14,6 +14,8 @@ enum {
     N_TST = 0x0b,  //   test A
     N_CLF = 0x0c,  //   clear carry and zero flags
     N_SEF = 0x0d,  //   set carry and zero flags
+    N_LAX = 0x0e,  //   load A indexed by SP
+    N_SAX = 0x0f,  //   store A indexed by SP
     N_JMP = 0x10,  //   jump unconditional
     N_JC = 0x11,  //   jump on Carry
     N_JZ = 0x12,  //   jump on Zero
@@ -27,6 +29,8 @@ enum {
     N_RZ = 0x1a,  //   return if zero
     N_RNC = 0x1b,  //   return if not carry
     N_RNZ = 0x1c,  //   return if not zero
+    N_INS = 0x1d,  //   increment SP
+    N_DCS = 0x1e,  //   decrement SP
     N_ADI = 0x20,  //   add  immediate to A
     N_ADM = 0x21,  //   add memory to A
     N_SBI = 0x22,  //   subtract immediate from A

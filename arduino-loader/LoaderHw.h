@@ -27,15 +27,15 @@ class LoaderHw {
     uint8_t readRegister(uint8_t reg);
     void writeRegister(uint8_t reg, uint8_t data);
     void transferRegister(uint8_t wReg, uint8_t rReg);
-    bool writeData(const byte data[], uint8_t len, uint8_t address);
-    byte readByte(uint8_t address);
+    bool writeData(const byte data[], uint16_t len, uint16_t address);
+    byte readByte(uint16_t address);
     void writeControls(uint8_t data);
     bool testHardware();
 
   protected:
     bool mEnabled;
 
-    bool burnByte(byte value, uint8_t address);
+    bool burnByte(byte value, uint16_t address);
     bool valueTest(uint8_t writeVal, uint8_t readVal, const char * s="", uint8_t addr=0);
     bool testOutputRegister();
     bool testRegister(unsigned reg, bool isRw);
@@ -48,7 +48,7 @@ class LoaderHw {
     void selectWriteRegister(uint8_t reg);
     void selectReadRegister(uint8_t reg);
     void setDataBusMode(uint8_t mode);
-    void setAddress(uint8_t address);
+    void setAddress(uint16_t address);
     byte readDataBus();
     void writeDataBus(byte data);
 };

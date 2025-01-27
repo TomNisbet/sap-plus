@@ -4,7 +4,7 @@
 #include "CmdStatus.h"
 #include "LoaderHw.h"
 
-static const char * MY_VERSION = "2.0";
+static const char * MY_VERSION = "2.1";
 
 // Global loader hardware interface
 LoaderHw hw;
@@ -12,6 +12,7 @@ CmdStatus cmdStatus;
 
 // Instruction opcodes.  Those marked with an asterisk use the ALU and thus must have
 // specific opcodes that match the bits that are hardwired from the IR to the ALU control.
+// Instruction opcodes.
 enum {
     N_NOP = 0x00,  //   no operation
     N_OUT = 0x01,  //   output A
@@ -27,29 +28,34 @@ enum {
     N_TST = 0x0b,  //   test A
     N_CLF = 0x0c,  //   clear carry and zero flags
     N_SEF = 0x0d,  //   set carry and zero flags
+    N_LAX = 0x0e,  //   load A indexed by SP
+    N_SAX = 0x0f,  //   store A indexed by SP
     N_JMP = 0x10,  //   jump unconditional
-    N_JC = 0x11,  //   jump on Carry
-    N_JZ = 0x12,  //   jump on Zero
+    N_JC =  0x11,  //   jump on Carry
+    N_JZ =  0x12,  //   jump on Zero
     N_JNC = 0x13,  //   jump on no Carry
     N_JNZ = 0x14,  //   jump on no Zero
     N_PHA = 0x15,  //   push A
     N_PLA = 0x16,  //   pull A
     N_JSR = 0x17,  //   jump to subroutine
     N_RTS = 0x18,  //   return from subroutine
-    N_RC = 0x19,  //   return if carry
-    N_RZ = 0x1a,  //   return if zero
+    N_RC =  0x19,  //   return if carry
+    N_RZ =  0x1a,  //   return if zero
     N_RNC = 0x1b,  //   return if not carry
     N_RNZ = 0x1c,  //   return if not zero
+    N_INS = 0x1d,  //   increment SP
+    N_DCS = 0x1e,  //   decrement SP
     N_ADI = 0x20,  //   add  immediate to A
     N_ADM = 0x21,  //   add memory to A
     N_SBI = 0x22,  //   subtract immediate from A
     N_SBM = 0x23,  //   subtract memory from A
     N_ACI = 0x24,  //   add immediate to A with carry
     N_ACM = 0x25,  //   add memory to A with carry
-    N_SCI = 0x26,  //   subtract immediate from A with borrow
-    N_SCM = 0x27,  //   subtract memory from A with borrow
+    N_SCI = 0x26,  //   subtract immediate from A with carry
+    N_SCM = 0x27,  //   subtract memory from A with carry
     N_CPI = 0x28,  //   compare immediate to A
     N_CPM = 0x29,  //   compare memory to A
+    N_CYN = 0x3f   //   can you not
 };
 
 
@@ -66,28 +72,6 @@ static const uint8_t pgmShift[] = {
     N_JMP, 0x00
 };
 
-static const uint8_t pgmSimple[] = {
-    // Program to test build 2 HW with no ALU
-    N_LAI, 1,
-    N_LAI, 2,
-    N_LAI, 4,
-    N_LAI, 8,
-    N_LAI, 16,
-    N_LAI, 32,
-    N_LAI, 64,
-    N_LAI, 128,
-    N_NOP,
-    N_LAI, 64,
-    N_LAI, 32,
-    N_LAI, 16,
-    N_LAI, 8,
-    N_LAI, 4,
-    N_LAI, 2,
-    N_LAI, 1,
-    N_NOP,
-    N_JMP, 2     // JMP back to LOOP
-};
-
 static const uint8_t pgmFastCount[] = {
     // No code - special case - the loader fills memory with repeated N_INA, N_OUT
 };
@@ -101,60 +85,11 @@ static const uint8_t pgmCount3[] = {
     N_JMP, 2     // JMP back to LOOP
 };
 
-static const uint8_t pgmStack1[] = {
-              //    ; Test the stack using the PHA/PLA and JSR/RTS instructions
-              //
-              // ff STKTOP  equ     0xff
-              // 0a N       equ     10
-              //
-  0x02, 0xff, // 00         lai     STKTOP  ; initialize the stack to the top of memory
-  0x05,       // 02         tas
-  0x02, 0x00, // 03         lai     0       ; Test stack - load value to A and push, change A, pop
-              //
-              //    LOOP:
-  0x01,       // 05         out             ; output and save A
-  0x15,       // 06         pha
-  0x17, 0x18, // 07         jsr     ADDN    ; output and save A+N
-  0x15,       // 09         pha
-  0x17, 0x18, // 0a         jsr     ADDN    ; output and save A+2N
-  0x15,       // 0c         pha
-  0x17, 0x18, // 0d         jsr     ADDN    ; output A+3N
-  0x16,       // 0f         pla
-  0x01,       // 10         out             ; restore and output A+2N
-  0x16,       // 11         pla
-  0x01,       // 12         out             ; restore and output A+N
-  0x16,       // 13         pla
-  0x01,       // 14         out             ; restore and output A
-  0x07,       // 15         ina             ; increment A and repeat the pattern
-  0x10, 0x05, // 16         jmp     LOOP
-              //
-              //    ADDN:   ; Add N to A and output the new value
-  0x20, 0x0a, // 18         adi     N
-  0x01,       // 1a         out
-  0x18        // 1b         rts
-};
+#include "pgmBounce.h"
+#include "pgmFibonacci.h"
+#include "pgmPrimes.h"
+#include "pgmStackTest.h"
 
-static const uint8_t pgmFib[] = {
-              //            data
-              // 00 NUM1:   byte
-              // 01 NUM2:   byte
-              //
-              //            code
-              //    START:
-  0x02, 0x01, // 00         lai     1
-  0x04, 0x00, // 02         sam     NUM1
-  0x01,       // 04         out
-              //    LOOP:
-  0x04, 0x01, // 05         sam     NUM2
-  0x01,       // 07         out
-  0x21, 0x00, // 08         adm     NUM1
-  0x11, 0x00, // 0a         jc      START
-  0x04, 0x00, // 0c         sam     NUM1
-  0x01,       // 0e         out
-  0x21, 0x01, // 0f         adm     NUM2
-  0x11, 0x00, // 11         jc      START
-  0x10, 0x05  // 13         jmp     LOOP
-};
 
 struct program_t {
     const uint8_t * data;
@@ -162,12 +97,13 @@ struct program_t {
     const char *    name;
 };
 static const program_t programs[] = {
-    pgmSimple,      sizeof(pgmSimple),    "Simple",
+    pgmBounce,      sizeof(pgmBounce),    "Bounce",
     pgmFastCount,   0,                    "Fast Count",
     pgmShift,       sizeof(pgmShift),     "Shift",
-    pgmFib,         sizeof(pgmFib),       "Fibbonacci",
+    pgmFibonacci,   sizeof(pgmFibonacci), "Fibonacci",
     pgmCount3,      sizeof(pgmCount3),    "Count by 3",
-    pgmStack1,      sizeof(pgmStack1),    "Stack Test"
+    pgmPrimes,      sizeof(pgmPrimes),    "Primes",
+    pgmStackTest,   sizeof(pgmStackTest), "Stack Test"
 };
 
 
@@ -541,6 +477,14 @@ void insertBytes(char * pCursor) {
     cmdStatus.info(" successful");
 }
 
+void listPrograms() {
+    unsigned n = sizeof(programs) / sizeof(*programs);
+    for (unsigned ix = 0; (ix < n); ix++) {
+        Serial.print(ix);
+        Serial.print(" - ");
+        Serial.println(programs[ix].name);
+    }
+}
 void printRegisterNames() {
     for (int num = 0; (num < 16); num++) {
         Serial.print("  ");
@@ -689,12 +633,7 @@ void processCommand() {
         break;
 
     case CMD_LIST:
-        int n = sizeof(programs) / sizeof(*programs);
-        for (int ix = 0; (ix < n); ix++) {
-            Serial.print(ix);
-            Serial.print(" - ");
-            Serial.println(programs[ix].name);
-        }
+        listPrograms();
 
         break;
 

@@ -1,39 +1,43 @@
-Name,Opcode,Description,Bytes,Cycles,Carry,Zero,Text
-NOP,0x00,no operation,1,3,,,No operation is performed.  Data registers and flags are unchanged.
-OUT,0x01,output A,1,3,,,Store A in the Output Register for display.
-LAI,0x02,load A immediate,2,4,,,Load A with immediate value stored in the next byte in program memory.
-LAM,0x03,load A from memory,2,5,,,Load A with the value from memory address specified by the next byte in program memory.
-SAM,0x04,store A to memory,2,5,,,Store A to memory at the address specified by the next byte in program memory.
-TAS,0x05,transfer A to SP,1,3,,,Transfer A to the SP register.  A is unchanged.
-TSA,0x06,transfer SP to A,1,3,,,Transfer the value of the SP register to A.  SP is unchanged.
-INA,0x07,increment A,1,4,set if wrap to zero,set if wrap to zero,Increment A.
-DCA,0x08,decrement A,1,4,clear if wrap past zero,set if A decremented to zero,Decrement A.
-NOT,0x09,NOT A,1,4,undetermined,set if zero,"Replace A with the logical NOT of A, meaning that all zero bits become one and all one bits become zero."
-ASL,0x0a,arithmetic shift left A,1,4,set if A overflows,set if zero,Shift A one position left.  Least significant bit of A takes the value of the Carry flag and the Carry Flag is set with the most significant bit of A.
-TST,0x0b,test A,1,4,set if A is negative,set if A is zero,Test A for sign and zero.  Carry flag becomes a minus flag (A<0). The Zero flag is set if A=0.
-CLF,0x0c,clear carry and zero flags,1,4,clear,clear,Clear carry and zero flags.
-SEF,0x0d,set carry and zero flags,1,4,set,set,Set carry and zero flags.
-JMP,0x10,jump unconditional,2,4,,,Jump to address argument
-JC,0x11,jump on Carry,2,4,,,Jump to address argument if Carry flag set
-JZ,0x12,jump on Zero,2,4,,,Jump to address argument if Zero  flag set
-JNC,0x13,jump on no Carry,2,4,,,Jump to address argument if Carry flag clear
-JNZ,0x14,jump on no Zero,2,4,,,Jump to address argument if Zero  flag clear
-PHA,0x15,push A,1,5,,,Push accumulator onto to the stack.  The value of A is first written to the RAM location pointed to by SP and then SP is decremented.
-PLA,0x16,pull A,1,5,,,Pull accumulator from the stack.  SP is incremented and then the value for A is read from RAM at the new SP location.
-JSR,0x17,jump to subroutine,2,7,,,Jump to subroutine at address argument.  PC is stored on the stack and then SP is decremented.
-RTS,0x18,return from subroutine,1,5,,,Return from subroutine.  SP is incremented and then PC is read from RAM at the new SP location.
-RC,0x19,return if carry,1,5,,,Return from subroutine if Carry flag is set else no operation.
-RZ,0x1a,return if zero,1,5,,,Return from subroutine if Zero flag is set else no operation.
-RNC,0x1b,return if not carry,1,5,,,Return from subroutine if Carry flag is not set else no operation.
-RNZ,0x1c,return if not zero,1,5,,,Return from subroutine if Zero flag is not set else no operation.
-ADI,0x20,add  immediate to A,2,5,set if A overflows,set if zero,Add A to immediate value and store the result in A.  The Carry flag value is not used in the addition.
-ADM,0x21,add memory to A,2,6,set if A overflows,set if zero,Add A to value  in data memory at the address argument and store the result in A.  The Carry flag value is not used in the addition.
-SBI,0x22,subtract immediate from A,2,5,clear if A underflows,set if zero,Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
-SBM,0x23,subtract memory from A,2,6,clear if A underflows,set if zero,Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the compuation.
-ACI,0x24,add immediate to A with carry,2,5,set if A overflows,set if zero,"Add A to immediate value and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1."
-ACM,0x25,add memory to A with carry,2,6,set if A overflows,set if zero,"Add A to value in data memory at the address argument and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1."
-SCI,0x26,subtract immediate from A with carry,2,5,clear if A underflows,set if zero,"Subtract  immediate value from A and store the result in A.  The Carry flag is included in the subtraction.  If Carry is clear, the value in A will be A-value-1."
-SCM,0x27,subtract memory from A with carry,2,6,clear if A underflows,set if zero,"Subtract  value in data memory at the address argument from A and store the result in A.   The Carry flag is included in the subtraction.  If Carry is clear, the value in A will be A-value-1."
-CPI,0x28,compare immediate to A,2,5,clear if A < value,set if equal,Compare A to immediate value in the next byte of program memory.  Carry flag is clear if A<value and Zero flag is set if A=value.  The value of A is not changed.
-CPM,0x29,compare memory to A,2,6,clear if A < value,set if equal,Compare A to the value in data memory addressed by  the next byte of program memory.  Carry flag is clear if A<value and Zero flag is set if A=value.  The value of A is not changed.
-CYN,0x3f,can you not,1,16,,,"Toggles A between its original value and NOT A.  The value is swapped seven times, so the final value is NOT A at the end of the instruction.  Because A toggles between two values, this can be used to create a noticable visual indicator for a spin loop when a program completes.  Useful starting values for A are 0x55, 0xf0, or 0xcc. "
+Name,Opcode,Description,Bytes,Cycles,Alias,Carry,Zero,Text
+NOP,0x00,no operation,1,3,,,,No operation is performed.  Data registers and flags are unchanged.
+OUT,0x01,output A,1,3,,,,Store A in the Output Register for display.
+LAI,0x02,load A immediate,2,4,,,,Load A with immediate value stored in the next byte in program memory.
+LAM,0x03,load A from memory,2,5,,,,Load A with the value from memory address specified by the next byte in program memory.
+SAM,0x04,store A to memory,2,5,,,,Store A to memory at the address specified by the next byte in program memory.
+TAS,0x05,transfer A to SP,1,3,,,,Transfer A to the SP register.  A is unchanged.
+TSA,0x06,transfer SP to A,1,3,,,,Transfer the value of the SP register to A.  SP is unchanged.
+INA,0x07,increment A,1,4,,set if wrap to zero,set if wrap to zero,Increment A.
+DCA,0x08,decrement A,1,4,,clear if wrap past zero,set if A decremented to zero,Decrement A.
+NOT,0x09,NOT A,1,4,,undetermined,set if zero,"Replace A with the logical NOT of A, meaning that all zero bits become one and all one bits become zero."
+ASL,0x0a,arithmetic shift left A,1,4,,set if A overflows,set if zero,Shift A one position left.  Least significant bit of A takes the value of the Carry flag and the Carry Flag is set with the most significant bit of A.
+TST,0x0b,test A,1,4,,set if A is negative,set if A is zero,Test A for sign and zero.  Carry flag becomes a minus flag (A<0). The Zero flag is set if A=0.
+CLF,0x0c,clear carry and zero flags,1,4,,clear,clear,Clear carry and zero flags.
+SEF,0x0d,set carry and zero flags,1,4,,set,set,Set carry and zero flags.
+LAX,0x0e,load A indexed by SP,1,4,,,,Load A from memory indexed by SP. This is similar to a PLA operation except the value of SP is not changed.
+SAX,0x0f,store A indexed by SP,1,4,,,,Store A to memory indexed by SP. This is similar to a PHA operation except the value of SP is not changed.
+JMP,0x10,jump unconditional,2,4,,,,Jump to address argument
+JC,0x11,jump on Carry,2,4,JLT|jump if less than,,,Jump to address argument if Carry flag set
+JZ,0x12,jump on Zero,2,4,JEQ|jump if equal,,,Jump to address argument if Zero  flag set
+JNC,0x13,jump on no Carry,2,4,JGE|jump if greater or equal,,,Jump to address argument if Carry flag clear
+JNZ,0x14,jump on no Zero,2,4,JNE|jump if not equal,,,Jump to address argument if Zero  flag clear
+PHA,0x15,push A,1,5,,,,Push accumulator onto to the stack.  The value of A is first written to the RAM location pointed to by SP and then SP is decremented.
+PLA,0x16,pull A,1,5,,,,Pull accumulator from the stack.  SP is incremented and then the value for A is read from RAM at the new SP location.
+JSR,0x17,jump to subroutine,2,7,,,,Jump to subroutine at address argument.  PC is stored on the stack and then SP is decremented.
+RTS,0x18,return from subroutine,1,5,,,,Return from subroutine.  SP is incremented and then PC is read from RAM at the new SP location.
+RC,0x19,return if carry,1,5,RLT|return if less than,,,Return from subroutine if Carry flag is set else no operation.
+RZ,0x1a,return if zero,1,5,REQ|return if equal,,,Return from subroutine if Zero flag is set else no operation.
+RNC,0x1b,return if not carry,1,5,RGE|return if greater or equal,,,Return from subroutine if Carry flag is not set else no operation.
+RNZ,0x1c,return if not zero,1,5,RNE|return if not equal,,,Return from subroutine if Zero flag is not set else no operation.
+INS,0x1d,increment SP,1,4,,undetermined,set is SP is sero after increment,Increment the Stack Pointer.  Not needed for normal stack operation.  Manipulates SP when SP is used as an index register.
+DCS,0x1e,decrement SP,1,4,,undetermined,set is SP is sero after decrement,Decrement the Stack Pointer.  Not needed for normal stack operation.  Manipulates SP when SP is used as an index register.
+ADI,0x20,add  immediate to A,2,5,,set if A overflows,set if zero,Add A to immediate value and store the result in A.  The Carry flag value is not used in the addition.
+ADM,0x21,add memory to A,2,6,,set if A overflows,set if zero,Add A to value  in data memory at the address argument and store the result in A.  The Carry flag value is not used in the addition.
+SBI,0x22,subtract immediate from A,2,5,,clear if A underflows,set if zero,Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
+SBM,0x23,subtract memory from A,2,6,,clear if A underflows,set if zero,Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the compuation.
+ACI,0x24,add immediate to A with carry,2,5,,set if A overflows,set if zero,"Add A to immediate value and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1."
+ACM,0x25,add memory to A with carry,2,6,,set if A overflows,set if zero,"Add A to value in data memory at the address argument and store the result in A.  The Carry flag value is included in the addition.  If Carry is set, the value in A will be A+value+1."
+SCI,0x26,subtract immediate from A with carry,2,5,,clear if A underflows,set if zero,"Subtract  immediate value from A and store the result in A.  The Carry flag is included in the subtraction.  If Carry is clear, the value in A will be A-value-1."
+SCM,0x27,subtract memory from A with carry,2,6,,clear if A underflows,set if zero,"Subtract  value in data memory at the address argument from A and store the result in A.   The Carry flag is included in the subtraction.  If Carry is clear, the value in A will be A-value-1."
+CPI,0x28,compare immediate to A,2,5,,clear if A < value,set if equal,Compare A to immediate value in the next byte of program memory.  Carry flag is clear if A<value and Zero flag is set if A=value.  The value of A is not changed.
+CPM,0x29,compare memory to A,2,6,,clear if A < value,set if equal,Compare A to the value in data memory addressed by  the next byte of program memory.  Carry flag is clear if A<value and Zero flag is set if A=value.  The value of A is not changed.
+CYN,0x3f,can you not,1,16,,,,"Toggles A between its original value and NOT A.  The value is swapped seven times, so the final value is NOT A at the end of the instruction.  Because A toggles between two values, this can be used to create a noticable visual indicator for a spin loop when a program completes.  Useful starting values for A are 0x55, 0xf0, or 0xcc. "

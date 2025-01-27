@@ -1,6 +1,6 @@
 #include "Arduino.h"
 
-static const char * MY_VERSION = "1.3";
+static const char * MY_VERSION = "1.4";
 
 // IO lines for the EEPROM device control
 // Pins D2..D9 are used for the data bus.
@@ -199,6 +199,9 @@ enum {
     N_RZ  = 0x1a,  //   return if zero
     N_RNC = 0x1b,  //   return if not carry
     N_RNZ = 0x1c,  //   return if not zero
+    N_LAX = 0x1d,  //   load A indexed by SP
+    N_INS = 0x1e,  //   increment SP
+    N_DCS = 0x1f,  //   decrement SP
     N_ADI = 0x20,  //   add  immediate to A
     N_ADM = 0x21,  //   add memory to A
     N_SBI = 0x22,  //   subtract immediate from A
@@ -265,9 +268,8 @@ const template_t template0 PROGMEM = {
   { RA|WB,      RA|FL|N,    0,          0,          0,          0,          0,          0    }, // 0b N_TST   4
   { RA|WB,      RL|BI|FL|N, 0,          0,          0,          0,          0,          0    }, // 0c N_CLF   4
   { RA|WB,      RL|BI|FL|LCI|N,  0,     0,          0,          0,          0,          0    }, // 0d N_SEF   4
-  { 0,          0,          0,          0,          0,          0,          0,          0    }, // 0e
-  { 0,          0,          0,          0,          0,          0,          0,          0    }, // 0f
-
+  { RS|WM,      RRD|WA|N,   0,          0,          0,          0,          0,          0    }, // 0e N_LAX   4
+  { RS|WM,      RA|WRD|N,   0,          0,          0,          0,          0,          0    }, // 0f N_SAX   4
   { FAA,        RRC|WP|N,   0,          0,          0,          0,          0,          0    }, // 10 N_JMP   4
   { FAA,        RRC|WP|N,   0,          0,          0,          0,          0,          0    }, // 11 N_JC    4
   { FAA,        RRC|WP|N,   0,          0,          0,          0,          0,          0    }, // 12 N_JZ    4
@@ -278,23 +280,23 @@ const template_t template0 PROGMEM = {
   { FAA,        RRC|WB,     RS|WM,      RP|WRS,     RB|WP|SPD|N,     0,     0,          0    }, // 17 N_JSR   7
   { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 18 N_RTS   5
   { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 19 N_RC    5
-  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 20 N_RZ    5
-  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 21 N_RNC   5
-  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 22 N_RNZ   5
-  { 0,          0,          0,          0,          0,          0,          0,          0    }, // 1d
-  { 0,          0,          0,          0,          0,          0,          0,          0    }, // 1e
+  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 1a N_RZ    5
+  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 1b N_RNC   5
+  { SPI,        RS|WM,      RRS|WP|N,   0,          0,          0,          0,          0    }, // 1c N_RNZ   5
+  { SPI,        RS|FL|N,    0,          0,          0,          0,          0,          0    }, // 1d N_INS   4
+  { SPD,        RS|FL|N,    0,          0,          0,          0,          0,          0    }, // 1e N_DCS   4
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 1f
 
   { FAA,        RRC|WB,     RL|WA|FL|N, 0,          0,          0,          0,          0    }, // 20 N_ADI   5
   { FAA,        RRC|WM,     RRD|WB,     RL|WA|FL|N, 0,          0,          0,          0    }, // 21 N_ADM   6
   { FAA,        RRC|WB,     RL|WA|FL|BI|LCI|N,  0,  0,          0,          0,          0    }, // 22 N_SBI   5
   { FAA,        RRC|WM,     RRD|WB,     RL|WA|FL|BI|LCI|N,  0,  0,          0,          0    }, // 23 N_SBM   6
-  { FAA,        RRC|WB,     RL|WA|FL|N, 0,          0,          0,          0,          0    }, // 24 N_ACI   5
-  { FAA,        RRC|WM,     RRD|WB,     RL|WA|FL|N,     0,      0,          0,          0    }, // 25 N_ACM   6
-  { FAA,        RRC|WB,     RL|WA|FL|BI|N,  0,      0,          0,          0,          0    }, // 26 N_SCI   5
-  { FAA,        RRC|WM,     RRD|WB,     RL|WA|FL|BI|N,  0,      0,          0,          0    }, // 27 N_SCM   6
-  { FAA,        RRC|WB,     FL|BI|LCI|N,  0,        0,          0,          0,          0    }, // 28 N_CPI   5
-  { FAA,        RRC|WM,     RRD|WB,     FL|BI|LCI|N,0,          0,          0,          0    }, // 29 N_CPM   6
+  { FAA,        RRC|WB,     RL|WA|FL|N,      0,     0,          0,          0,          0    }, // 24 N_ACI   5
+  { FAA,        RRC|WM,     RRD|WB,     RL|WA|FL|N,      0,     0,          0,          0    }, // 25 N_ACM   6
+  { FAA,        RRC|WB,     RL|WA|FL|BI|N,   0,     0,          0,          0,          0    }, // 26 N_SCI   5
+  { FAA,        RRC|WM,     RRD|WB,     RL|WA|FL|BI|N,   0,     0,          0,          0    }, // 27 N_SCM   6
+  { FAA,        RRC|WB,     RL|FL|BI|LCI|N,  0,     0,          0,          0,          0    }, // 28 N_CPI   5
+  { FAA,        RRC|WM,     RRD|WB,     RL|FL|BI|LCI|N,  0,     0,          0,          0    }, // 29 N_CPM   6
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 2a
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 2b
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 2c
@@ -317,7 +319,7 @@ const template_t template0 PROGMEM = {
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 3c
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 3d
   { 0,          0,          0,          0,          0,          0,          0,          0    }, // 3e
-  { RA|WB,      RB|WA|BI,   RA|WB,      RB|WA|BI,   RA|WB,      RB|WA|BI,   RA|WB,      RB|WA|BI }, // 3f N_CYN   16
+  { RA|WB|BI,   RB|WA|BI,   RA|WB|BI,   RB|WA|BI,   RA|WB|BI,   RB|WA|BI,   RA|WB|BI,   RB|WA|BI }, // 3f N_CYN   16
 };
 
 // A buffer to hold the microinstruction words (steps) for an instruction that have been
@@ -394,7 +396,7 @@ void buildInstruction(unsigned opcode, unsigned flags) {
             // The steps in code[0..1] are hard-coded for all instructions,
             // code[2..9] are filled in from the table and the remaining
             // steps code[10..15] are created here.
-            code[10] = code[12] = code[14] = RA|WB;
+            code[10] = code[12] = code[14] = RA|WB|BI;
             code[11] = code[13] = code[15] = RB|WA|BI;
             break;
     }

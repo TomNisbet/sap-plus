@@ -222,10 +222,10 @@ void LoaderHw::transferRegister(uint8_t wReg, uint8_t rReg) {
 }
 
 // Write a block of data to the memory.
-bool LoaderHw::writeData(const byte data[], uint8_t len, uint8_t address) {
+bool LoaderHw::writeData(const byte data[], uint16_t len, uint16_t address) {
     bool status = true;
 
-    for (uint8_t ix = 0; (ix < len); ix++) {
+    for (uint16_t ix = 0; (ix < len); ix++) {
         if (burnByte(data[ix], address + ix) == false) {
             status = false;
             break;
@@ -235,7 +235,7 @@ bool LoaderHw::writeData(const byte data[], uint8_t len, uint8_t address) {
 }
 
 // Read a byte from a given address
-byte LoaderHw::readByte(uint8_t address) {
+byte LoaderHw::readByte(uint16_t address) {
     byte data = 0;
 
     setAddress(address);
@@ -335,7 +335,7 @@ bool LoaderHw::testHardware() {
 ////////////////////////////////////////////////
 
 // Write a byte to the memory
-bool LoaderHw::burnByte(byte value, uint8_t address) {
+bool LoaderHw::burnByte(byte value, uint16_t address) {
     enable();
     setAddress(address);
     setDataBusMode(OUTPUT);
@@ -465,20 +465,20 @@ bool LoaderHw::testCounters(uint8_t count) {
 bool LoaderHw::testMemory(bool highMem) {
     unsigned numPatterns = sizeof(patterns);
     unsigned addr;
+    uint16_t blockAddr = 0;
 
     if (highMem) {
         cmdStatus.test("Hi RAM");
-        controlBitsOffOn(CTL_NONE, CTL_MX);
+        blockAddr = 0x100;
     } else {
         cmdStatus.test("Lo RAM");
-        controlBitsOffOn(CTL_MX, CTL_NONE);
     }
     for (unsigned offset = 0; (offset < numPatterns); offset++) {
         for (addr = 0; (addr < 256); addr++) {
-            burnByte(patterns[(offset + addr) % numPatterns], addr);
+            burnByte(patterns[(offset + addr) % numPatterns], addr | blockAddr);
         }
         for (addr = 0; (addr < 256); addr++) {
-            uint8_t readVal = readByte(addr);
+            uint8_t readVal = readByte(addr | blockAddr);
             uint8_t expectedVal = patterns[(offset + addr) % numPatterns];
             if (!valueTest(expectedVal, readVal, NULL, addr)) return false;
         }
@@ -642,9 +642,14 @@ void LoaderHw::setDataBusMode(uint8_t mode) {
 }
 
 // Set an 8-bit address on the data bus and latch it into the MAR
-void LoaderHw::setAddress(uint8_t address) {
+void LoaderHw::setAddress(uint16_t address) {
     // NOTE: Must call selectWriteRegister before setting the bus because the call to
     // selectWriteRegister may call enable and that will reset the bus.
+    if (address & 0x100) {
+        controlBitsOffOn(CTL_NONE, CTL_MX);
+    } else {
+        controlBitsOffOn(CTL_MX, CTL_NONE);
+    }
     selectWriteRegister(REG_MAR);
     setDataBusMode(OUTPUT);
     writeDataBus(address);

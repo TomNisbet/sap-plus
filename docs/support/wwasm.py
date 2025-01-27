@@ -2,11 +2,11 @@
 """
 
 import argparse
+import os
 
 __version__="1.2"
 
 parser = argparse.ArgumentParser("World's Worst Assembler")
-parser.add_argument('-c', '--code', action='store_true', help="write C code for Arduino Loader")
 parser.add_argument('-l', '--list', action='store_true', help="write a human-readale listing - don't use with -c")
 parser.add_argument('-m', '--monitor', action='store_true', help="write Insert commands for Monitor CLI")
 parser.add_argument("filename", help="Input file name")
@@ -14,10 +14,12 @@ args = parser.parse_args()
 
 ins = {'NOP': '00', 'OUT': '01', 'LAI': '02', 'LAM': '03', 'SAM': '04', 'TAS': '05', 'TSA': '06', 
        'INA': '07', 'DCA': '08', 'NOT': '09', 'ASL': '0a', 'TST': '0b', 'CLF': '0c', 'SEF': '0d', 
-       'JMP': '10', 'JC':  '11', 'JZ':  '12', 'JNC': '13', 'JNZ': '14', 'PHA': '15', 'PLA': '16', 
-       'JSR': '17', 'RTS': '18', 'RC':  '19', 'RZ':  '1a', 'RNC': '1b', 'RNZ': '1c', 
-       'ADI': '20', 'ADM': '21', 'SBI': '22', 'SBM': '23', 'ACI': '24', 'ACM': '25', 'SCI': '26', 
-       'SCM': '27', 'CPI': '28', 'CPM': '29', 'CYN': '3f' }
+       'LAX': '0e', 'SAX': '0f', 'JMP': '10', 'JC':  '11', 'JLT': '11', 'JZ':  '12', 'JEQ': '12', 
+       'JNC': '13', 'JGE': '13', 'JNZ': '14', 'JNE': '14', 'PHA': '15', 'PLA': '16', 'JSR': '17', 
+       'RTS': '18', 'RC':  '19', 'RLT': '19', 'RZ':  '1a', 'REQ': '1a', 'RNC': '1b', 'RGE': '1b', 
+       'RNZ': '1c', 'RNE': '1c', 'INS': '1d', 'DCS': '1e', 'ADI': '20', 'ADM': '21', 'SBI': '22', 
+       'SBM': '23', 'ACI': '24', 'ACM': '25', 'SCI': '26', 'SCM': '27', 'CPI': '28', 'CPM': '29', 
+       'CYN': '3f'}
 
 def assemble(pass2):
     code = 0
@@ -26,7 +28,12 @@ def assemble(pass2):
     mem[memAddr]= []
     isCode = True
     lineNum = 0
-    with open(args.filename, 'r') as asmFile:
+    srcDir, srcFile = os.path.split(args.filename)
+    f, _ = os.path.splitext(srcFile)
+    f = f[0].upper() + f[1:]
+    hFilename = os.path.join(srcDir, 'pgm' + f + '.h')
+    with open(args.filename, 'r') as asmFile, open(hFilename, 'w') as hFile:
+        print("static const uint8_t pgm{}[] = {{".format(f), file=hFile)
         for line in asmFile:
             printLine = line.rstrip()
             lineNum += 1
@@ -88,7 +95,7 @@ def assemble(pass2):
                 else:
                     h = ins.get(op)
                     if not h:
-                        print("ERROR: op not found - ".format(op))
+                        print("ERROR: op not found - '{}".format(op))
                     mem[memAddr].append(h) 
                     lineAddr = "{:02x}".format(code)
                     if arg:
@@ -101,13 +108,14 @@ def assemble(pass2):
                         listBytes = "{}".format(h)
                         code += 1
 
-            if args.code and pass2:
-                print("  {:12}// {} {}".format(cppBytes, lineAddr, printLine))
+            if pass2:
+                print("  {:12}// {} {}".format(cppBytes, lineAddr, printLine), file=hFile)
 
             if args.list and pass2:
                 sep = '  ' if lineAddr[0] == ' ' else ': '
                 print("{}{}{:8}{}".format(lineAddr, sep, listBytes, printLine))
 
+        print('};', file=hFile)
 
 def printMem(mem):
     step = 8
