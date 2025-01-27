@@ -33,42 +33,43 @@ static const uint8_t pgmPrimes[] = {
               //            ; Check if NUM is prime by dividing it by the current prime value pointed to by SP
   0x06,       // 11         tsa             ; If SP = ENDIX (counts down) then no more primes to test against, so NUM is prime
   0x29, 0x02, // 12         cpm     ENDIX
-  0x12, 0x2b, // 14         jeq     ISPRM   ; SP = ENDIX
+  0x12, 0x2d, // 14         jeq     ISPRM   ; SP = ENDIX
   0x0e,       // 16         lax             ; Get divisor from primes list and store in DIV
   0x1e,       // 17         dcs             ; point SP to next divisor
   0x04, 0x01, // 18         sam     DIV     ; If DIV > 127 or DIV > (NUM/2) then it is too big to divide any possible
   0x0a,       // 1a         asl             ;   value of NUM.  This means that all useful DIVs have been tested, so NUM is prime.
-              //                            ; Note there is no need to check DIV=(NUM/2) because that would have been caught when DIV=2.
-  0x11, 0x2b, // 1b         jc      ISPRM   ; DIV > 127
+              //                            ; The DIV=(NUM/2) only catches DIV=2,NUM=4. Larger values of NUM are caught would during division when DIV=2.
+  0x11, 0x2d, // 1b         jc      ISPRM   ; DIV > 127
   0x29, 0x00, // 1d         cpm     NUM
-  0x13, 0x2b, // 1f         jge     ISPRM   ; DIV >= (NUM/2)
-  0x03, 0x00, // 21         lam     NUM     ; Load NUM into A to prepare for repeated subtraction loop
+  0x12, 0x37, // 1f         jeq     NEXT    ; DIV = (NUM/2)
+  0x11, 0x2d, // 21         jge     ISPRM   ; DIV >= (NUM/2)
+  0x03, 0x00, // 23         lam     NUM     ; Load NUM into A to prepare for repeated subtraction loop
               //    ISDIV:
               //            ; Check if NUM is evenly divisible by DIV using repeated subtraction.
-  0x23, 0x01, // 23         sbm     DIV     ; subtract DIV from what remains of NUM in A
-  0x12, 0x35, // 25         jz      NEXT    ; zero means it is divisible, so this number is not prime
-  0x13, 0x11, // 27         jnc     NXTDIV  ; carry clear indicates underflow, NUM / DIV not evenly divisible, try the next DIV
-  0x10, 0x23, // 29         jmp     ISDIV   ; division not done, keep subtracting
+  0x23, 0x01, // 25         sbm     DIV     ; subtract DIV from what remains of NUM in A
+  0x12, 0x37, // 27         jz      NEXT    ; zero means it is divisible, so this number is not prime
+  0x13, 0x11, // 29         jnc     NXTDIV  ; carry clear indicates underflow, NUM / DIV not evenly divisible, try the next DIV
+  0x10, 0x25, // 2b         jmp     ISDIV   ; division not done, keep subtracting
               //    
               //    ISPRM:
-  0x03, 0x02, // 2b         lam     ENDIX   ; point SP to the next available entry in the PRIMES list
-  0x05,       // 2d         tas
-  0x03, 0x00, // 2e         lam     NUM     ; output NUM and add it to the end of the list
-  0x01,       // 30         out
-  0x15,       // 31         pha             ; store NUM in the next entry in the PRIMES array and decrement SP
-  0x06,       // 32         tsa             ; store new index for the next available list entry
-  0x04, 0x02, // 33         sam     ENDIX
+  0x03, 0x02, // 2d         lam     ENDIX   ; point SP to the next available entry in the PRIMES list
+  0x05,       // 2f         tas
+  0x03, 0x00, // 30         lam     NUM     ; output NUM and add it to the end of the list
+  0x01,       // 32         out
+  0x15,       // 33         pha             ; store NUM in the next entry in the PRIMES array and decrement SP
+  0x06,       // 34         tsa             ; store new index for the next available list entry
+  0x04, 0x02, // 35         sam     ENDIX
               //    
               //    NEXT:
-  0x03, 0x00, // 35         lam     NUM     ; check the next highest number for prime
-  0x07,       // 37         ina
-  0x11, 0x3e, // 38         jc      SPIN    ; all primes found
-  0x04, 0x00, // 3a         sam     NUM
-  0x10, 0x0d, // 3c         jmp     NXTPRM
+  0x03, 0x00, // 37         lam     NUM     ; check the next highest number for prime
+  0x07,       // 39         ina
+  0x11, 0x40, // 3a         jc      SPIN    ; all primes found
+  0x04, 0x00, // 3c         sam     NUM
+  0x10, 0x0d, // 3e         jmp     NXTPRM
               //    
               //    SPIN:
-  0x02, 0x55, // 3e         lai     0x55    ; Loop here forever, but at least look cool while doing it
+  0x02, 0x55, // 40         lai     0x55    ; Loop here forever, but at least look cool while doing it
               //    SPIN2:
-  0x3f,       // 40         cyn
-  0x10, 0x40, // 41         jmp     SPIN2
+  0x3f,       // 42         cyn
+  0x10, 0x42, // 43         jmp     SPIN2
 };

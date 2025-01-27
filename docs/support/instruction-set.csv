@@ -16,17 +16,17 @@ SEF,0x0d,set carry and zero flags,1,4,,set,set,Set carry and zero flags.
 LAX,0x0e,load A indexed by SP,1,4,,,,Load A from memory indexed by SP. This is similar to a PLA operation except the value of SP is not changed.
 SAX,0x0f,store A indexed by SP,1,4,,,,Store A to memory indexed by SP. This is similar to a PHA operation except the value of SP is not changed.
 JMP,0x10,jump unconditional,2,4,,,,Jump to address argument
-JC,0x11,jump on Carry,2,4,JLT|jump if less than,,,Jump to address argument if Carry flag set
+JC,0x11,jump on Carry,2,4,JGE|jump if greater or equal,,,Jump to address argument if Carry flag set
 JZ,0x12,jump on Zero,2,4,JEQ|jump if equal,,,Jump to address argument if Zero  flag set
-JNC,0x13,jump on no Carry,2,4,JGE|jump if greater or equal,,,Jump to address argument if Carry flag clear
+JNC,0x13,jump on no Carry,2,4,JLT|jump if less than,,,Jump to address argument if Carry flag clear
 JNZ,0x14,jump on no Zero,2,4,JNE|jump if not equal,,,Jump to address argument if Zero  flag clear
 PHA,0x15,push A,1,5,,,,Push accumulator onto to the stack.  The value of A is first written to the RAM location pointed to by SP and then SP is decremented.
 PLA,0x16,pull A,1,5,,,,Pull accumulator from the stack.  SP is incremented and then the value for A is read from RAM at the new SP location.
 JSR,0x17,jump to subroutine,2,7,,,,Jump to subroutine at address argument.  PC is stored on the stack and then SP is decremented.
 RTS,0x18,return from subroutine,1,5,,,,Return from subroutine.  SP is incremented and then PC is read from RAM at the new SP location.
-RC,0x19,return if carry,1,5,RLT|return if less than,,,Return from subroutine if Carry flag is set else no operation.
+RC,0x19,return if carry,1,5,RGE|return if greater or equal,,,Return from subroutine if Carry flag is set else no operation.
 RZ,0x1a,return if zero,1,5,REQ|return if equal,,,Return from subroutine if Zero flag is set else no operation.
-RNC,0x1b,return if not carry,1,5,RGE|return if greater or equal,,,Return from subroutine if Carry flag is not set else no operation.
+RNC,0x1b,return if not carry,1,5,RLT|return if less than,,,Return from subroutine if Carry flag is not set else no operation.
 RNZ,0x1c,return if not zero,1,5,RNE|return if not equal,,,Return from subroutine if Zero flag is not set else no operation.
 INS,0x1d,increment SP,1,4,,undetermined,set is SP is sero after increment,Increment the Stack Pointer.  Not needed for normal stack operation.  Manipulates SP when SP is used as an index register.
 DCS,0x1e,decrement SP,1,4,,undetermined,set is SP is sero after decrement,Decrement the Stack Pointer.  Not needed for normal stack operation.  Manipulates SP when SP is used as an index register.

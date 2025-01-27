@@ -1,6 +1,6 @@
 #include "Arduino.h"
 
-static const char * MY_VERSION = "1.4";
+static const char * MY_VERSION = "1.5";
 
 // IO lines for the EEPROM device control
 // Pins D2..D9 are used for the data bus.
@@ -383,13 +383,13 @@ void buildInstruction(unsigned opcode, unsigned flags) {
 
         case N_JC:    skipJmp = ((flags & FL_C) == 0);      break;
         case N_JZ:    skipJmp = ((flags & FL_Z) == 0);      break;
-        case N_JNZ:   skipJmp = ((flags & FL_C) != 0);      break;
-        case N_JNC:   skipJmp = ((flags & FL_Z) != 0);      break;
+        case N_JNC:   skipJmp = ((flags & FL_C) != 0);      break;
+        case N_JNZ:   skipJmp = ((flags & FL_Z) != 0);      break;
 
         case N_RC:    skipRts = ((flags & FL_C) == 0);      break;
         case N_RZ:    skipRts = ((flags & FL_Z) == 0);      break;
-        case N_RNZ:   skipRts = ((flags & FL_C) != 0);      break;
-        case N_RNC:   skipRts = ((flags & FL_Z) != 0);      break;
+        case N_RNC:   skipRts = ((flags & FL_C) != 0);      break;
+        case N_RNZ:   skipRts = ((flags & FL_Z) != 0);      break;
 
         case N_CYN:
             // Example of an instruction with more than ten steps.

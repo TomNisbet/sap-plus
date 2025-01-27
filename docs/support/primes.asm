@@ -37,9 +37,10 @@ NXTDIV:
         dcs             ; point SP to next divisor
         sam     DIV     ; If DIV > 127 or DIV > (NUM/2) then it is too big to divide any possible
         asl             ;   value of NUM.  This means that all useful DIVs have been tested, so NUM is prime.
-                        ; Note there is no need to check DIV=(NUM/2) because that would have been caught when DIV=2.
+                        ; The DIV=(NUM/2) only catches DIV=2,NUM=4. Larger values of NUM are caught would during division when DIV=2.
         jc      ISPRM   ; DIV > 127
         cpm     NUM
+        jeq     NEXT    ; DIV = (NUM/2)
         jge     ISPRM   ; DIV >= (NUM/2)
         lam     NUM     ; Load NUM into A to prepare for repeated subtraction loop
 ISDIV:
