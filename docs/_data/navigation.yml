@@ -26,6 +26,8 @@ docs:
         url: /docs/a-b-registers/
       - title: "ALU"
         url: /docs/alu/
+      - title: "Output Register"
+        url: /docs/output-register/
       - title: "Module Template"
         url: /docs/template/
   - title: "Instruction Set"
