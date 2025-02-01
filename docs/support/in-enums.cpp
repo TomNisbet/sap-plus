@@ -31,7 +31,7 @@ enum {
     N_RNZ = 0x1c,  //   return if not zero
     N_INS = 0x1d,  //   increment SP
     N_DCS = 0x1e,  //   decrement SP
-    N_ADI = 0x20,  //   add  immediate to A
+    N_ADI = 0x20,  //   add immediate to A
     N_ADM = 0x21,  //   add memory to A
     N_SBI = 0x22,  //   subtract immediate from A
     N_SBM = 0x23,  //   subtract memory from A

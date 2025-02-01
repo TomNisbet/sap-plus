@@ -30,7 +30,7 @@ RNC,0x1b,return if not carry,1,5,RLT|return if less than,,,Return from subroutin
 RNZ,0x1c,return if not zero,1,5,RNE|return if not equal,,,Return from subroutine if Zero flag is not set else no operation.
 INS,0x1d,increment SP,1,4,,undetermined,set is SP is sero after increment,Increment the Stack Pointer.  Not needed for normal stack operation.  Manipulates SP when SP is used as an index register.
 DCS,0x1e,decrement SP,1,4,,undetermined,set is SP is sero after decrement,Decrement the Stack Pointer.  Not needed for normal stack operation.  Manipulates SP when SP is used as an index register.
-ADI,0x20,add  immediate to A,2,5,,set if A overflows,set if zero,Add A to immediate value and store the result in A.  The Carry flag value is not used in the addition.
+ADI,0x20,add immediate to A,2,5,,set if A overflows,set if zero,Add A to immediate value and store the result in A.  The Carry flag value is not used in the addition.
 ADM,0x21,add memory to A,2,6,,set if A overflows,set if zero,Add A to value  in data memory at the address argument and store the result in A.  The Carry flag value is not used in the addition.
 SBI,0x22,subtract immediate from A,2,5,,clear if A underflows,set if zero,Subtract  immediate value from A and store the result in A.  The Carry flag value is not used in the addition.
 SBM,0x23,subtract memory from A,2,6,,clear if A underflows,set if zero,Subtract  value in data memory at the address argument from A and store the result in A.  The Carry flag value is not used in the compuation.
