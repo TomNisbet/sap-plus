@@ -1,16 +1,24 @@
-"""World's Worst Assembler
+"""World's Worst Assembler for the SAP-Plus instruction set
 """
 
 import argparse
 import os
 
-__version__="1.2"
+__version__="1.3"
 
-parser = argparse.ArgumentParser("World's Worst Assembler")
-parser.add_argument('-l', '--list', action='store_true', help="write a human-readale listing - don't use with -c")
+epilog = """
+A C++ header file is created with the code bytes.  If the input file is named test.asm then
+the output file will be pgmTest.h.  Note that the header file does not support multiple,
+non-contiguous code blocks.  Multiple blocks are supported in the output of the --monitor command.
+"""
+
+parser = argparse.ArgumentParser(description="World's Worst Assembler", epilog=epilog)
+parser.add_argument('-l', '--list', action='store_true', help="write a human-readale listing")
 parser.add_argument('-m', '--monitor', action='store_true', help="write Insert commands for Monitor CLI")
+parser.add_argument('-v', '--version', action='version', version="%(prog)s v" +__version__+"")
 parser.add_argument("filename", help="Input file name")
 args = parser.parse_args()
+
 
 ins = {'NOP': '00', 'OUT': '01', 'LAI': '02', 'LAM': '03', 'SAM': '04', 'TAS': '05', 'TSA': '06', 'INA': '07', 
        'DCA': '08', 'NOT': '09', 'ASL': '0a', 'TST': '0b', 'CLF': '0c', 'SEF': '0d', 'LAX': '0e', 'SAX': '0f', 
@@ -19,6 +27,32 @@ ins = {'NOP': '00', 'OUT': '01', 'LAI': '02', 'LAM': '03', 'SAM': '04', 'TAS': '
        'REQ': '1a', 'RNC': '1b', 'RLT': '1b', 'RNZ': '1c', 'RNE': '1c', 'INS': '1d', 'DCS': '1e', 'ADI': '20', 
        'ADM': '21', 'SBI': '22', 'SBM': '23', 'ACI': '24', 'ACM': '25', 'SCI': '26', 'SCM': '27', 'CPI': '28', 
        'CPM': '29', 'CYN': '3f'}
+
+
+class AssemblerError(Exception):
+    def __init__(self, lineNum, msg, arg=None):
+        # Custom attributes
+        self.lineNum = lineNum
+        self.msg = msg
+        self.arg = arg
+        super().__init__(self.msg)  # Call the base class constructor
+
+    def __str__(self):
+        s = f"ERROR on line {self.lineNum}: {self.msg}"
+        if self.arg:
+            s = f"{s}'{self.arg}'"
+        return s
+
+
+# assemble
+#
+# Two pass assembler for the SAP-Plus instruction set.  The first pass resolves all of the label values, allowing
+# forward references.  The second pass outputs the code as a C++ header file that can be included in the Loader.
+#
+# An optional list file can be printed to stdout.
+#
+# The mem arrary is maintined as a dictionary of lists of bytes indexed by a starting address.  This can be
+# printed out as a series of Insert commands for the Loader/Monitor.
 def assemble(pass2):
     code = 0
     data = 0
@@ -59,20 +93,22 @@ def assemble(pass2):
                 arg = parts.pop(0).upper() if parts else None
                 argVal = None
                 if arg:
-                    if arg[0].isdigit():
+
+                    if arg[0].isdigit() or arg[0] == '-':
                         argVal = int(arg, 0)
+                        if argVal > 255 or argVal < -128:
+                            raise AssemblerError(lineNum, "argument out of range -128..255, value=", argVal)
+                        argVal = 256 + argVal if argVal < 0 else argVal
                     else:
                         argVal = labels.get(arg)
                         if argVal == None:
                             if pass2:
-                                print("{}: label not found: {}".format(lineNum, arg))
+                                raise AssemblerError(lineNum, "label not found, label=", arg)
                             else:
                                 argVal = 0 # don't fail a missing label on pass 1
                 #if asmPass == 1:
                 #    print("label={} op={} arg={}".format(label, op, arg))
-                if not op:
-                    pass
-                elif op == 'DATA':
+                if op == 'DATA':
                     isCode = False
                     data = argVal if arg else data
                 elif op == 'CODE':
@@ -90,10 +126,10 @@ def assemble(pass2):
                     else:
                         lineAddr = "{:02x}".format(data)
                         data += 1
-                else:
+                elif op:
                     h = ins.get(op)
                     if not h:
-                        print("ERROR: op not found - '{}".format(op))
+                        raise AssemblerError(lineNum, "unknown instruction name, name=", op)
                     mem[memAddr].append(h) 
                     lineAddr = "{:02x}".format(code)
                     if arg:
@@ -108,13 +144,17 @@ def assemble(pass2):
 
             if pass2:
                 print("  {:12}// {} {}".format(cppBytes, lineAddr, printLine), file=hFile)
-
-            if args.list and pass2:
-                sep = '  ' if lineAddr[0] == ' ' else ': '
-                print("{}{}{:8}{}".format(lineAddr, sep, listBytes, printLine))
+                if args.list:
+                    sep = '  ' if lineAddr[0] == ' ' else ': '
+                    print("{}{}{:8}{}".format(lineAddr, sep, listBytes, printLine))
 
         print('};', file=hFile)
 
+
+# printMem
+#
+# Print the code memory contents as a series of Insert commands for the Loader/Monitor.
+# Multiple, non-contiguous code blocks are supported.
 def printMem(mem):
     step = 8
     for key in mem:
@@ -126,8 +166,12 @@ def printMem(mem):
 
 labels = {}
 mem = {}
-assemble(False)
-assemble(True)
+try:
+    assemble(False)
+    assemble(True)
+except AssemblerError as e:
+    print(e)
+    exit(-1)
 #print(labels)
 if args.monitor:
     printMem(mem)
