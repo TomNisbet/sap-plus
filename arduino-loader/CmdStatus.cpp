@@ -44,6 +44,28 @@ void CmdStatus::info(const char * msg)
 */
 }
 
+
+void CmdStatus::run(const char * msg) {
+    Serial.print(F("running "));
+    Serial.println(msg);
+
+    display.fillScreen(0);
+    display.invertData(true);
+    display.fillAreaWithByte(0, 0, 2, 128, 0);
+    display.text2x(0, 9*4, "Running");
+    display.invertData(false);
+    display.text2x(3, (16-strlen(msg))*4, msg);
+}
+
+void CmdStatus::remaining(unsigned secs) {
+    char s[5];
+
+    display.text2x(6, 28, "Time:");
+    sprintf(s, "%4d", secs > 9999 ? 9999 : secs);
+    display.text2x(6, 28+5*8, s);
+}
+
+
 void CmdStatus::test(const char * msg) {
     Serial.print(F("Testing "));
     Serial.print(msg);

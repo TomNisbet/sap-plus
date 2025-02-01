@@ -45,7 +45,7 @@ enum {
     N_RNZ = 0x1c,  //   return if not zero
     N_INS = 0x1d,  //   increment SP
     N_DCS = 0x1e,  //   decrement SP
-    N_ADI = 0x20,  //   add  immediate to A
+    N_ADI = 0x20,  //   add immediate to A
     N_ADM = 0x21,  //   add memory to A
     N_SBI = 0x22,  //   subtract immediate from A
     N_SBM = 0x23,  //   subtract memory from A
@@ -93,19 +93,20 @@ static const uint8_t pgmCount3[] = {
 
 
 struct program_t {
+    unsigned        seconds;
     const uint8_t * data;
     size_t          len;
     const char *    name;
 };
 static const program_t programs[] = {
-    pgmBounce,      sizeof(pgmBounce),    "Bounce",
-    pgmSquares,     sizeof(pgmSquares),   "Squares",
-    pgmFastCount,   0,                    "Fast Count",
-    pgmFibonacci,   sizeof(pgmFibonacci), "Fibonacci",
-    pgmShift,       sizeof(pgmShift),     "Shift",
-    pgmCount3,      sizeof(pgmCount3),    "Count by 3",
-    pgmPrimes,      sizeof(pgmPrimes),    "Primes",
-    pgmStackTest,   sizeof(pgmStackTest), "Stack Test"
+    20,     pgmBounce,      sizeof(pgmBounce),    "Bounce",
+    20,     pgmSquares,     sizeof(pgmSquares),   "Squares",
+    20,     pgmFastCount,   0,                    "Fast Count",
+    30,     pgmFibonacci,   sizeof(pgmFibonacci), "Fibonacci",
+    10,     pgmShift,       sizeof(pgmShift),     "Shift",
+    20,     pgmCount3,      sizeof(pgmCount3),    "Count by 3",
+    100,    pgmPrimes,      sizeof(pgmPrimes),    "Primes",
+    30,     pgmStackTest,   sizeof(pgmStackTest), "Stack Test"
 };
 
 
@@ -119,22 +120,70 @@ static const char hex[] = "0123456789abcdef";
 
 void setup() {
     Serial.begin(115200);
+    Serial.println("Press RETURN to start the interactive monitor");
     hw.begin();
     cmdStatus.clear();
 
-    // burn the first sample program and return control to the host.  This lets the loader
-    // (and then the host) run with no user interaction at power up.
-    burnProgram(3, 0x00);
-    hw.disable();
+    if (!waitMillisForChar(5000)) {
+        // No key pressed for several seconds at power up.  Start demo mode.
+        demoMode();
+    }
+
+    cmdStatus.clear();
+    // If a character is received on the serial port, then Demo Mode will exit and control
+    // will fall through to the processCommand loop below.
 }
 
 void loop() {
     processCommand();
 }
 
+
+// Cycle through all of the demo programs continuously.  Step if the used presses a
+// key to enter the interactive monitor.
+void demoMode() {
+    unsigned numPrograms = sizeof(programs) / sizeof(*programs);
+    unsigned ix = 0;
+    bool keyPressed = false;
+
+    Serial.println("Starting Demo Mode");
+    while (!keyPressed) {
+        unsigned runSeconds = programs[ix].seconds;
+        burnProgram(ix, 0x00);
+        if (++ix >= numPrograms) {
+            ix = 0;
+        }
+        hw.disable();
+
+        // Run the program for runSeconds or until a key press
+        while (!keyPressed && runSeconds--) {
+            // Wait one second or until a char is received
+            cmdStatus.remaining(runSeconds);
+            keyPressed = waitMillisForChar(1000);
+        }
+    }
+}
+
+
+// wait until a character is ready on the serial port
 char waitChar() {
     while (!Serial.available()) {}
     return Serial.read();
+}
+
+// wait msWaitTime or until a character is ready on the serial port.  Returns
+// true if a char is ready to read.
+bool waitMillisForChar(unsigned long msWaitTime) {
+
+     unsigned long start = millis();
+     while (millis() - start < msWaitTime) {
+        if (Serial.available()) {
+            return true;
+        }
+     }
+
+    // No character available before msWaitTime elapsed
+    return false;
 }
 
 // Read a line of data from the serial connection.
@@ -418,29 +467,32 @@ void burnProgram(unsigned pgmIx, uint32_t start) {
     if (pgmIx < (sizeof(programs) / sizeof(*programs))) {
         const uint8_t * pgmData = programs[pgmIx].data;
         size_t pgmLen = programs[pgmIx].len;
+        const char * pgmName = programs[pgmIx].name;
 
+        cmdStatus.run(pgmName);
         if (pgmData == pgmFastCount) {
             // Special case
             burnFastCount();
-        }
-        sprintf(s, "Burning program %u at %04x len=%u", pgmIx, unsigned(start), pgmLen);
-        Serial.println(s);
-        hw.enable();
-        bool status = hw.writeData(pgmData, pgmLen, start);
-        if (!status) {
-            cmdStatus.error("Write failed");
-            return;
-        }
-
-        for (unsigned ix = 0; (ix < pgmLen); ix++) {
-            byte val = hw.readByte(start + ix);
-            if (val != pgmData[ix]) {
-                cmdStatus.fail(pgmData[ix], val, NULL, start+ix);
+        } else {
+            sprintf(s, "Burning %s program (%u) at %04x len=%u", pgmName, pgmIx, unsigned(start), pgmLen);
+            Serial.println(s);
+            hw.enable();
+            bool status = hw.writeData(pgmData, pgmLen, start);
+            if (!status) {
+                cmdStatus.error("Write failed");
                 return;
             }
+
+            for (unsigned ix = 0; (ix < pgmLen); ix++) {
+                byte val = hw.readByte(start + ix);
+                if (val != pgmData[ix]) {
+                    //cmdStatus.fail(pgmData[ix], val, NULL, start+ix);
+                    return;
+                }
+            }
+            cmdStatus.info("Write verified");
         }
         hw.reset();
-        cmdStatus.info("Write verified");
     }
 }
 
