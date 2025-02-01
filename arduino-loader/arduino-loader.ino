@@ -85,6 +85,7 @@ static const uint8_t pgmCount3[] = {
     N_JMP, 2     // JMP back to LOOP
 };
 
+#include "pgmSquares.h"
 #include "pgmBounce.h"
 #include "pgmFibonacci.h"
 #include "pgmPrimes.h"
@@ -98,9 +99,10 @@ struct program_t {
 };
 static const program_t programs[] = {
     pgmBounce,      sizeof(pgmBounce),    "Bounce",
+    pgmSquares,     sizeof(pgmSquares),   "Squares",
     pgmFastCount,   0,                    "Fast Count",
-    pgmShift,       sizeof(pgmShift),     "Shift",
     pgmFibonacci,   sizeof(pgmFibonacci), "Fibonacci",
+    pgmShift,       sizeof(pgmShift),     "Shift",
     pgmCount3,      sizeof(pgmCount3),    "Count by 3",
     pgmPrimes,      sizeof(pgmPrimes),    "Primes",
     pgmStackTest,   sizeof(pgmStackTest), "Stack Test"
