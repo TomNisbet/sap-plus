@@ -213,8 +213,8 @@ with open(specificFile, 'r') as inFile:
 
 makeEnums('in-enums.cpp')
 makeOpcodes('in-opcodes.cpp')
-makeInstructionSummaries('../_docs/in-10-summary.md')
-makeInstructionDetails('../_docs/in-20-details.md')
+makeInstructionSummaries('../docs/_docs/in-10-summary.md')
+makeInstructionDetails('../docs/_docs/in-20-details.md')
 print("opcodes={}: implemented={}, wip={}".format(len(opcodes), len(opcodes) - wip, wip))
 
 # print a dictionary for the assembler

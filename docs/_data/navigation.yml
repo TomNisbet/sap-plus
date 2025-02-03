@@ -30,6 +30,8 @@ docs:
         url: /docs/output-register/
       - title: "Module Template"
         url: /docs/template/
+      - title: "Utilities"
+        url: /docs/utilities/
   - title: "Instruction Set"
     children:
       - title: "Instruction Summary"
