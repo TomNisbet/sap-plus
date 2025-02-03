@@ -1,7 +1,6 @@
 # SAP-Plus Utilities
 
-This folder contains utility scripts and data for the SAP-Plus.  See the  
-[SAP-Plus Utilities](https://tomnisbet.github.io/sap-plus/docs/utilities/) page for the full documentation.
+This folder contains utility scripts and data for the SAP-Plus.  See the [SAP-Plus Utilities](https://tomnisbet.github.io/sap-plus/docs/utilities/) page for the full documentation.
 
 ## Instruction Set Script
 

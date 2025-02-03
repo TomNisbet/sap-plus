@@ -42,3 +42,12 @@ static const uint8_t pgmFibonacci[] = {
   0x10, 0x05, // 13         jmp     LOOP
 };
 ```
+
+The wwasm --monitor option generates Insert commands for the Arduino Loader/Monitor.
+
+``` bash
+utilities$ python3 wwasm.py -m fibonacci.asm
+i00 02 01 04 00 01 04 01 01
+i08 21 00 11 00 04 00 01 21
+i10 01 11 00 10 05
+```
