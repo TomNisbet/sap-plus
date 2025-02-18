@@ -8,7 +8,21 @@ The [utilities folder](https://github.com/TomNisbet/sap-plus/tree/main/utilities
 
 ## Instruction Set Script
 
-The sap-instructions.py script reads the instruction-set.cvs file with the instruction data and produces MarkDown files for the documentation.  It also creates C++ code with the instruction enums that are used by the Loader and Microcode scripts.
+The sap-instructions.py script reads the instruction-set.cvs file with the instruction data and produces MarkDown files for the documentation.  It also creates C++ code with the instruction enums that are used by the Loader and Microcode scripts.  
+
+The script creates four output files:
+
+### in-10-summary.md and in-20-details.md
+
+Instruction set summary and details MarkDown files for the documentaion.  These are written directly to the docs tree and can be checked in without modification after running the script.
+
+### in-enums.cpp
+
+A list of C++ enumerations for the instruction set.  Used by both arduino-microcode.ino and arduino-loader.ino. The content of this file need to be manually edited into the arduino sketch files.
+
+### in-opcodes.cpp
+
+The instruction opcodes and names as a C++ comment.  ALso includes the number of microcode steps for each instruction.  This can be used as the comment text in the microcode table in the Arduino sketch.
 
 ## World's Worst Assembler
 

@@ -13,6 +13,7 @@ ENDIX:  byte            ; address of most recently found prime
 PRIMES: byte            ; array of prime numbers.  Starts at the top of memory and grows down
 
         code
+        nop             ; start with a NOP to avoid reset/clock issues
 START:
         lai     1       ; store 1 as the first prime and output it
         sam     PRIMES

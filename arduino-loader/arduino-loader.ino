@@ -4,7 +4,7 @@
 #include "CmdStatus.h"
 #include "LoaderHw.h"
 
-static const char * MY_VERSION = "2.1";
+static const char * MY_VERSION = "2.3";
 
 // Global loader hardware interface
 LoaderHw hw;
@@ -78,11 +78,12 @@ static const uint8_t pgmFastCount[] = {
 
 static const uint8_t pgmCount3[] = {
     // Count by 3
-    N_LAI, 10,   // start at 10
+    N_NOP,
+    N_LAI, 0,    // start at 0
 // LOOP
     N_ACI, 3,    // ADD 3 to A
     N_OUT,       // OUT (A to display)
-    N_JMP, 2     // JMP back to LOOP
+    N_JMP, 3     // JMP back to LOOP
 };
 
 #include "pgmSquares.h"
@@ -139,6 +140,48 @@ void loop() {
 }
 
 
+void runProgram(unsigned pgmIx) {
+    char s[50];
+    const unsigned BEAT_DELAY = 800;
+    if (pgmIx < (sizeof(programs) / sizeof(*programs))) {
+        const program_t * pgm = programs + pgmIx;
+        const uint8_t * pgmData = pgm->data;
+        size_t pgmLen = pgm->len;
+
+        hw.enable();
+        delay(BEAT_DELAY);
+        hw.clearAll();
+        delay(BEAT_DELAY);
+
+        cmdStatus.program(pgm->name, CmdStatus::OP_LOADING);
+        if (pgmData == pgmFastCount) {
+            // Special case
+            burnFastCount();
+        } else {
+            sprintf(s, "Burning %s program (%u) len=%u", pgm->name, pgmIx, pgmLen);
+            Serial.println(s);
+            for (unsigned ix = 0; (ix < pgmLen); ix++) {
+                hw.writeData(pgmData + ix, 1, ix);
+                delay(80);
+            }
+            for (unsigned ix = 0; (ix < pgmLen); ix++) {
+                uint8_t b = hw.readByte(ix);
+                if (b != pgmData[ix]) {
+                    sprintf(s, "ERROR: mem[%02x]=%02x  pgm[%02x]=%02x", ix, b, ix, pgmData[ix]);
+                    Serial.println(s);
+                }
+            }
+        }
+
+        delay(BEAT_DELAY);
+        cmdStatus.program(pgm->name, CmdStatus::OP_RUNNING);
+        hw.clearAll();
+        delay(BEAT_DELAY);
+        hw.disable();
+    }
+}
+
+
 // Cycle through all of the demo programs continuously.  Step if the used presses a
 // key to enter the interactive monitor.
 void demoMode() {
@@ -149,11 +192,10 @@ void demoMode() {
     Serial.println("Starting Demo Mode");
     while (!keyPressed) {
         unsigned runSeconds = programs[ix].seconds;
-        burnProgram(ix, 0x00);
+        runProgram(ix);
         if (++ix >= numPrograms) {
             ix = 0;
         }
-        hw.disable();
 
         // Run the program for runSeconds or until a key press
         while (!keyPressed && runSeconds--) {
@@ -469,7 +511,7 @@ void burnProgram(unsigned pgmIx, uint32_t start) {
         size_t pgmLen = programs[pgmIx].len;
         const char * pgmName = programs[pgmIx].name;
 
-        cmdStatus.run(pgmName);
+        cmdStatus.program(pgmName, CmdStatus::OP_RUNNING);
         if (pgmData == pgmFastCount) {
             // Special case
             burnFastCount();
@@ -628,7 +670,7 @@ void usage() {
     Serial.println(F("  Gr        - Get (read) and print register value"));
     Serial.println(F("  Pr dd     - Put (write) value to register"));
     Serial.println(F("  =r1 r2    - Assign (r1=r2) copy value from register r2 to r1"));
-    Serial.println(F("  Y[cc]     - cYcle host hardware clock (with optional repeat count)"));
+    Serial.println(F("  Y[cc][ww] - cYcle host hardware clock (optional pulse count and width in uSec)"));
 
     Serial.println(F("\nMisc commands:"));
     Serial.println(F("  L         - List built-in program numbers and names"));
@@ -720,14 +762,14 @@ void processCommand() {
 
     case CMD_CYCLE:
         if (argc < 1) { a1 = 1; }
-        for (unsigned ix = 0; (ix < a1); ix++) {
-            hw.clkPulse();
-            delay(2);
+        if (argc < 2) { a2 = 500; }
+        for (uint32_t ix = 0; (ix < a1); ix++) {
+            hw.clkPulseWidth(a2);
         }
         break;
 
     case CMD_CLOCK:
-        hw.longPulse();
+        hw.clkPulse();
         break;
 
     case CMD_NAMES:

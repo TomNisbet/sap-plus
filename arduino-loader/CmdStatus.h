@@ -13,13 +13,15 @@
 class CmdStatus
 {
   public:
+    enum PgmOperation { OP_LOADING, OP_RUNNING };
+
     CmdStatus();
     void clear();
     void info(const char * msg);
     void error(const char * msg);
     void setValueDec(int index, const char * label, long value);
     void setValueHex(int index, const char * label, long value);
-    void run(const char * msg);
+    void program(const char * msg, PgmOperation op);
     void remaining(unsigned secs);
     void test(const char * msg);
     void pass();

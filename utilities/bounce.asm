@@ -1,5 +1,6 @@
 ; Simple test program to load a series of values into the A register.
 ; Requires only a minimal system with no ALU, Output Register, or stack.
+        nop             ; start with a NOP to avoid reset/clock issues
         lai     1    
 LOOP:
         lai     2    

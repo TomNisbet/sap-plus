@@ -4,6 +4,7 @@ NUM1:   byte
 NUM2:   byte
 
         code
+        nop             ; start with a NOP to avoid reset/clock issues
 START:
         lai     1       ; Start with the first number in the sequence and save as NUM1
         sam     NUM1

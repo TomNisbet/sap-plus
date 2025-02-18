@@ -3,6 +3,7 @@
 STKTOP  equ     0xff
 N       equ     10
 
+        nop             ; start with a NOP to avoid reset/clock issues
         lai     STKTOP  ; initialize the stack to the top of memory
         tas
         lai     0       ; Test stack - load value to A and push, change A, pop

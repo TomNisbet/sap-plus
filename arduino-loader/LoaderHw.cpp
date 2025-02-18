@@ -71,9 +71,11 @@ static const char * registerNames[] = {
     "08",   "MAR", "IR",  "0B",  "0C",  "0D",  "0E",  "B inverted"
 };
 static const unsigned woRegisters[] = { REG_MAR } ;//, REG_MEM, REG_IR };
-static const unsigned rwRegisters[] = { REG_A, REG_B, REG_B_INVERTED, REG_SP, REG_PC, };
+static const unsigned rwRegisters[] = { REG_A, REG_B, REG_B_INVERTED, REG_SP, REG_PC };
+static const unsigned clrRegisters[] = { REG_A, REG_B, REG_OUT, REG_PC, REG_SP, REG_MAR, REG_IR };
 static unsigned numWoRegisters() { return sizeof(woRegisters) / sizeof(*woRegisters); }
 static unsigned numRwRegisters() { return sizeof(rwRegisters) / sizeof(*rwRegisters); }
+static unsigned numClrRegisters() { return sizeof(clrRegisters) / sizeof(*clrRegisters); }
 
 #if 0
 static void waitForUser(const char * s = 0) {
@@ -152,12 +154,11 @@ void LoaderHw::clkPulse() {
 
 // Generate one exteremely long pulse on the host clock to allow probing of the rising
 // and falling edge
-void LoaderHw::longPulse() {
-    clkPulse();
-//    delay(500);
-//    digitalWrite(CLK, HIGH);
-//    delay(1000);
-//    digitalWrite(CLK, LOW);
+void LoaderHw::clkPulseWidth(unsigned width) {
+    digitalWrite(CLK, HIGH);
+    delayMicroseconds(width);
+    digitalWrite(CLK, LOW);
+    delayMicroseconds(width);
 }
 
 // Generate one reset pulse to the host
@@ -169,9 +170,9 @@ void LoaderHw::reset() {
 }
 
 void LoaderHw::clearAll() {
-    // Set all registers to zero
-    for (int ix = 1; (ix < 16); ix++) {
-        writeRegister(ix, 0);
+    // Set all clearable registers to zero
+    for (unsigned ix = 0; (ix < numClrRegisters()); ix++) {
+        writeRegister(clrRegisters[ix], 0);
     }
 
     // Clear the flags register.  With both A and B at zero, adding A to inverted B
@@ -182,7 +183,7 @@ void LoaderHw::clearAll() {
     clkPulse();
     writeControls(CTL_N);
 
-    // Clock the flag bits into the IR, along with zeroes in the 6 instruction bits.
+    // Clock the flag bits into the IR, along with zeroes from the bus in the 6 instruction bits.
     selectReadRegister(REG_NONE);
     selectWriteRegister(REG_IR);
     clkPulse();

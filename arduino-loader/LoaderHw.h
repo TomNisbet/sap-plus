@@ -20,7 +20,7 @@ class LoaderHw {
     void disable();
     bool isActive() { return mEnabled; }
     void clkPulse();
-    void longPulse();
+    void clkPulseWidth(unsigned width);
     void reset();
     void clearAll();
     const char * registerName(int registerNumber);

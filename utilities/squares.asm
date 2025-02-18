@@ -7,6 +7,7 @@
 NUM:    byte
 
         code
+        nop             ; start with a NOP to avoid reset/clock issues
 START:
         lai     0       ; output zero as the first square
         out
@@ -15,7 +16,7 @@ NEXT:
         lam     NUM     ; find the next square.  Don't need to check overflow
         ina             ;   here because NUM * NUM will overflow before NUM
         sam     NUM
-        tas             ; Add NUM to itself NUM times.  SP is the add counter
+        tas             ; Add NUM to itself NUM-1 times.  SP is the add counter
 MULT:
         dcs             ; see if more adds are needed
         jz      MDONE   ; done - NUM has been added to itself NUM times

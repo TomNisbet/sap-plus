@@ -45,14 +45,14 @@ void CmdStatus::info(const char * msg)
 }
 
 
-void CmdStatus::run(const char * msg) {
+void CmdStatus::program(const char * msg, PgmOperation op) {
     Serial.print(F("running "));
     Serial.println(msg);
 
     display.fillScreen(0);
     display.invertData(true);
     display.fillAreaWithByte(0, 0, 2, 128, 0);
-    display.text2x(0, 9*4, "Running");
+    display.text2x(0, 9*4, (op == OP_LOADING) ? "Loading" : "Running");
     display.invertData(false);
     display.text2x(3, (16-strlen(msg))*4, msg);
 }
