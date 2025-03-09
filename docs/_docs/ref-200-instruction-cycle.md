@@ -4,7 +4,11 @@ permalink: /docs/instruction-cycle/
 excerpt: "Instruction Cycle and Timing for the SAP-Plus computer"
 ---
 
-The [WaveDrom timing diagram](https://wavedrom.com/) below shows the execution of a Load A Immediate (LAI) instruction, followed by an OUT A instruction.
+The SAP-Plus instruction cycle is driven by the Instruction Register (IR) and Step Counter (SC).  These two registers provide the address bits to the microcode ROMs. By selecting an instruction and step, these registers determine which signals are asserted by the ROMs at each microcode step.
+
+Each instruction step causes actions on both the falling and rising edge of each CLK pulse. The Step Counter changes on every falling CLK edge, so this is when each microinstruction step asserts new control signals.  Register read selects cause a register value to be read onto the bus at this time.  The registers load on a rising CLK edge, so the value from the bus is clocked into the selected write register on the rising edge.
+
+For a concrete example, the [WaveDrom timing diagram](https://wavedrom.com/) below shows the execution of a Load A Immediate (LAI) instruction, followed by an OUT A instruction.
 
 [![Instruction timing](../../assets/images/timing-lai-out.png "Timing of LAI and OUT instructions")](../../assets/images/timing-lai-out.png)
 
@@ -18,7 +22,7 @@ Load A Immediate is a two-byte instruction.  The A register is loaded with the v
 
 **Marker 3**: the falling CLK edge increments the Step Counter to enter step _T1_.  This asserts the Read RAM and Write IR signals.  At this point, the RAM contents at the MAR address are read onto the bus.
 
-**Marker 4**: the rising CLK edge loads the contents of RAM into the Instruction Register (IR).  This is the end of the _T0_ and _T1_ instruction fetch steps.  The Microcode ROM is no executing the LAI instruction's microcode steps.
+**Marker 4**: the rising CLK edge loads the contents of RAM into the Instruction Register (IR).  This is the end of the _T0_ and _T1_ instruction fetch steps.  The Microcode ROM is now executing the LAI instruction's microcode steps.
 
 **Markers 5..6**: the MAR is loaded from the PC in step _T2_, exactly as was done in step T0.  This fetches the address of the instruction operand.
 
