@@ -36,9 +36,8 @@ This is a one byte instruction that loads the contents of the A register into th
 
 **Marker 15:** the N signal from the OUT instruction resets the Step Counter back to T0 at this falling clock edge, starting the next instruction fetch sequence.
 
-> [!NOTE]
-> The Instruction Register does not get loaded until midway through the T1 microinstruction step. During T0 and T1, the IR still has the value of the previous instruction.  For example, at **Marker 9** the T0 step of the OUT instruction is executing, but the IR still contains the LAI instruction and is therefore executing the T0 step of the LAI microcode, not the OUT microcode.  This is why all instructions **must** have identical microcode for their T0 and T1 steps.
-
+The Instruction Register does not get loaded until midway through the T1 microinstruction step. During T0 and T1, the IR still has the value of the previous instruction.  For example, at **Marker 9** the T0 step of the OUT instruction is executing, but the IR still contains the LAI instruction and is therefore executing the T0 step of the LAI microcode, not the OUT microcode.  This is why all instructions **must** have identical microcode for their T0 and T1 steps.
+{: .notice--info}
 
 ## Reset Timing
 
