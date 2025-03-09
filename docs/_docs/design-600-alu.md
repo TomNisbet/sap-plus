@@ -33,7 +33,7 @@ The SP-PLUS ALU has two subtle differences from the [Ben Eater SAP-1](https://ea
 
 The second change is that the _SU_ signal on the SAP-1 is separated into individual _BI_ and _CX_ signals that invert the B register and feed the carry-in signal of the adders.  This change allows the _NOT_, _INC_ and _DEC_ instructions.  It also enables the _ADC_ and _SBC_, that can be used to create code to add or subtract numbers larger than eight bits.
 
-[![NQSAP ALU schematic)](../../assets/images/alu-schematic.png "ALU schematic"){:width="500px"}](../../assets/images/alu-schematic.png)
+[![SAP-Plus ALU schematic)](../../assets/images/alu-schematic.png "ALU schematic"){:width="500px"}](../../assets/images/alu-schematic.png)
 
 
 ## Flags

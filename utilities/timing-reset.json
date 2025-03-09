@@ -1,0 +1,19 @@
+{
+  signal: [
+    {name: 'step',       wave: 'x.3...4...5...3..', data: ['T0', 'T1', 'T2', 'T0']},
+    {name: 'CLK',        wave: 'H.l.H.l.H.l.H.l.H', period: '1'},
+    {name: '<o>RST</o>', wave: '1...01............................', period: '0.5'},
+    {name: 'read',       wave: 'x.3...4...5...3..', data: ['PC',  'RAM', 'A',   'PC']},
+    {name: 'write',      wave: 'x.3...4...5...3..', data: ['MAR', 'IR',  'OUT', 'MAR']},
+    {name: '<o>RP</o>',  wave: 'x.0...1.......0..'},
+    {name: '<o>WM</o>',  wave: 'x.0...1.......0..'},
+    {name: 'PI',         wave: 'x.1...0.......1..'},
+  ],
+
+  head:{
+    text: 'Reset Timing',
+    tick: 0,
+    every: 1
+  }
+}  
+

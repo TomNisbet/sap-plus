@@ -1,0 +1,14 @@
+{
+  signal: [
+    {name: 'step',       wave: 'x3...4...5...6...x.', data: ['T0', 'T1', 'T2', 'T3']},
+    {name: 'clk', wave: "Hl.H.l.H.l.H.l.H.l."},
+    {name: 'CO', wave: "l.xh......xl..xl..xl......xl......xl..", period: '0.5'},
+    {name: 'MI', wave: "l.xh......xl..xl..xl......xl......xl..", period: '0.5'},
+  ],
+
+  head:{
+    text: 'Move PC to MAR',
+    tick: 0,
+    every: 1
+  },
+}

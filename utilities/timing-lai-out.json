@@ -1,0 +1,21 @@
+{
+  signal: [
+    {name: 'step',  wave: 'x3.4.5.6.3.4.5.3.x', data: ['T0', 'T1', 'T2', 'T3', 'T0', 'T1', 'T2', 'T0']},
+    {node:                '.A.......B.....C'},
+    {name: 'CLK',   wave: 'HlHlHlHlHlHlHlHlHl', period: '1'},
+    {name: 'read',  wave: 'x3.4.5.6.3.4.5.3.x', data: ['PC',  'RAM', 'PC',  'RAM','PC',  'RAM', 'A',   'PC']},
+    {name: 'write', wave: 'x3.4.5.6.3.4.5.3.x', data: ['MAR', 'IR',  'MAR', 'A'  ,'MAR', 'IR',  'OUT', 'MAR']},
+    {name: 'PI',    wave: '01.0.....1.0...1.0'},
+    {name: 'N',     wave: '0......1.0...1.0..'},
+    {name: 'IR',    wave: 'x...2.......2.....', data: ["LAI", "OUT"] },
+    {name: 'IR2',   wave: 'x....2.......2....', data: ["LAI", "OUT"] },
+  ],
+
+  head:{
+    text: 'Execution of LAI followed by OUT',
+    tick: 0,
+    every: 1
+  },
+
+  edge: ["A<->B LAI", "B<->C OUT"]
+}  

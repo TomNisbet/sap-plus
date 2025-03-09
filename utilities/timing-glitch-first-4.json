@@ -1,0 +1,14 @@
+{
+  signal: [
+    {name: 'step',       wave: 'x3...4...5...6...x.', data: ['T0', 'T1', 'T2', 'T3']},
+    {name: 'CLK',        wave: "Hl.H.l.H.l.H.l.H.l."},
+    {name: '<o>CLK</o>', wave: "lH.l.H.l.H.l.H.l.H."},
+    {name: 'some ctl',   wave: "l.xl......xl..xl..xl......xh......xl..", period: '0.5'},
+  ],
+
+  head:{
+    text: 'First 4 Instruction Cycles',
+    tick: 0,
+    every: 1
+  }
+}

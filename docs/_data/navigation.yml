@@ -38,6 +38,12 @@ docs:
         url: /docs/in-summary/
       - title: "Instruction Details"
         url: /docs/in-details/
+  - title: "Reference"
+    children:
+      - title: "Instruction Cycle"
+        url: /docs/instruction-cycle/
+      - title: "EEPROM Glitch"
+        url: /docs/eeprom-glitch/
   - title: "Links"
     children:
       - title: "Code and Schematics"
