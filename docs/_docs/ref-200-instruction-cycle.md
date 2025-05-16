@@ -43,6 +43,10 @@ This is a one byte instruction that loads the contents of the A register into th
 The Instruction Register does not get loaded until midway through the _T1_ microinstruction step. During _T0_ and _T1_, the IR still has the value of the previous instruction.  For example, at **Marker 9** the _T0_ step of the OUT instruction is executing, but the IR still contains the LAI instruction and is therefore executing the T0 step of the LAI microcode, not the OUT microcode.  This is why all instructions **must** have identical microcode for their _T0_ and _T1_ steps.
 {: .notice--info}
 
+## SAP-Plus 2nd Instruction Register (IR2)
+
+SAP-Plus uses a double-buffered Instruction Register (IR) to mitigate the [EEPROM Glitch](https://tomnisbet.github.io/sap-plus/docs/eeprom-glitch/#sap-plus-design-to-avoid-the-glitch) that happens when the address lines of the microcode EEPROMs are changed.  As shown in the timing diagram of the previous section, The IR2 register is loaded from the IR on every falling clock edge. The microcode address lines are driven by IR2 instead or IR.  This means that the address lines only change when the Step Counter or IR2 values change, and both of these conditions only occur on a falling clock edge.
+
 ## Reset Timing
 
 The diagram below shows the system reset sequence.  In this example, the program at address 0 is starts with an OUT instruction.
