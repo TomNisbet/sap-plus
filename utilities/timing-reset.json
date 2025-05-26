@@ -5,6 +5,7 @@
     {name: '<o>RST</o>', wave: '1...01............................', period: '0.5'},
     {name: 'read',       wave: 'x.3...4...5...3..', data: ['PC',  'RAM', 'A',   'PC']},
     {name: 'write',      wave: 'x.3...4...5...3..', data: ['MAR', 'IR',  'OUT', 'MAR']},
+    {name: 'pc',         wave: 'xx2.2...........2', data: ['0', '1',  '2']},
     {name: '<o>RP</o>',  wave: 'x.0...1.......0..'},
     {name: '<o>WM</o>',  wave: 'x.0...1.......0..'},
     {name: 'PI',         wave: 'x.1...0.......1..'},

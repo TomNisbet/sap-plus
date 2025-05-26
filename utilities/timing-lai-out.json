@@ -5,7 +5,7 @@
     {name: 'CLK',   wave: 'HlHlHlHlHlHlHlHlHl', period: '1'},
     {name: 'read',  wave: 'x3.4.5.6.3.4.5.3.x', data: ['PC',  'RAM', 'PC',  'RAM','PC',  'RAM', 'A',   'PC']},
     {name: 'write', wave: 'x3.4.5.6.3.4.5.3.x', data: ['MAR', 'IR',  'MAR', 'A'  ,'MAR', 'IR',  'OUT', 'MAR']},
-    {name: 'pc',    wave: '2.2...2...2.....2x', data: ['0', '1',  '2', '3'  ,'4', 'IR',  'OUT', 'MAR']},
+    {name: 'pc',    wave: '2.2...2...2.....2x', data: ['0', '1',  '2', '3'  ,'4']},
     {name: 'PI',    wave: '01.0.1.0.1.0...1.0'},
     {name: 'N',     wave: '0......1.0...1.0..'},
     {name: 'IR',    wave: 'x...2.......2.....', data: ["LAI", "OUT"] },
