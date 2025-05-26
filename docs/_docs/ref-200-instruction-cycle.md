@@ -24,7 +24,7 @@ Load A Immediate is a two-byte instruction.  The A register is loaded with the v
 
 **Marker 4**: the rising CLK edge loads the contents of RAM into the Instruction Register (IR).  This is the end of the _T0_ and _T1_ instruction fetch steps.  The Microcode ROM is now executing the LAI instruction's microcode steps.
 
-**Markers 5..6**: the MAR is loaded from the PC in step _T2_, exactly as was done in step T0.  This fetches the address of the instruction operand.
+**Markers 5..6**: the MAR is loaded from the PC and the PC is incremented in step _T2_, exactly as was done in step T0.  This fetches the address of the instruction operand.
 
 **Markers 7..8**: in step _T3_, the RAM contents are loaded into the A register.  The Next (N) signal is also asserted in this step, which will reset the SC back to step 0 (_T0_) to end the instruction.  The N reset is synchronous and will occur at the falling CLK edge at **marker 9**.
 
