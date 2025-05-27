@@ -115,23 +115,23 @@ def makeInstructionSummaries(filename):
     with open(filename, 'w') as f:
         writeFileHeader(f, 'SAP-Plus Instructions', 'in-summary','Instruction set summaries for the SAP-Plus Computer')
         f.write('\n## Instructions by Name\n\n')
-        f.write('|' + '|'.join(['Name', 'Opcode', 'Description']) + '|\n')
-        f.write('|' + '|'.join([':---', ':---', ':---']) + '|\n')
+        f.write('|' + '|'.join(['Name', 'Opcode', 'Bytes', 'Description']) + '|\n')
+        f.write('|' + '|'.join([':---', ':---', ':---', ':---']) + '|\n')
         for name in sorted(allNames):
             inName = allNames[name]
             gi = instructions[inName]
             desc = gi.description if name == inName else gi.aliasDescription
-            f.write('|' + '|'.join([detailsLink(name, inName), gi.opcode, desc]) + '|\n')
+            f.write('|' + '|'.join([detailsLink(name, inName), gi.opcode, gi.bytes, desc]) + '|\n')
         f.write('\n')
 
         f.write('\n## Instructions by Opcode\n\n')
-        f.write('|' + '|'.join(['Opcode', 'Name', 'Description']) + '|\n')
-        f.write('|' + '|'.join([':---', ':---', ':---']) + '|\n')
+        f.write('|' + '|'.join(['Opcode', 'Name', 'Bytes', 'Description']) + '|\n')
+        f.write('|' + '|'.join([':---', ':---', ':---', ':---']) + '|\n')
         for name in sorted(opcodes):
             gi = opcodes[name]
-            f.write('|' + '|'.join([gi.opcode, detailsLink(gi.name, gi.name), gi.description]) + '|\n')
+            f.write('|' + '|'.join([gi.opcode, detailsLink(gi.name, gi.name), gi.bytes, gi.description]) + '|\n')
             if gi.alias:
-                f.write('|' + '|'.join([gi.opcode, detailsLink(gi.alias, gi.name), gi.aliasDescription]) + '|\n')
+                f.write('|' + '|'.join([gi.opcode, detailsLink(gi.alias, gi.name), gi.bytes, gi.aliasDescription]) + '|\n')
         f.write('\n')
         writeFileFooter(f)
 

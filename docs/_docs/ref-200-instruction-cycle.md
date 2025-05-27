@@ -45,7 +45,7 @@ The Instruction Register does not get loaded until midway through the _T1_ micro
 
 ## SAP-Plus 2nd Instruction Register (IR2)
 
-SAP-Plus uses a double-buffered Instruction Register (IR) to mitigate the [EEPROM Glitch](https://tomnisbet.github.io/sap-plus/docs/eeprom-glitch/#sap-plus-design-to-avoid-the-glitch) that happens when the address lines of the microcode EEPROMs are changed.  As shown in the timing diagram of the previous section, the IR2 register is loaded from the IR on every falling clock edge. The Microcode ROM address lines are driven by IR2 instead or IR. This means that the address lines only change when the Step Counter or IR2 values change, and both of these conditions only occur on a falling clock edge.
+SAP-Plus uses a double-buffered Instruction Register (IR) to mitigate the [EEPROM Glitch](../eeprom-glitch/#sap-plus-design-to-avoid-the-glitch) that happens when the address lines of the microcode EEPROMs are changed.  As shown in the timing diagram of the previous section, the IR2 register is loaded from the IR on every falling clock edge. The Microcode ROM address lines are driven by IR2 instead or IR. This means that the address lines only change when the Step Counter or IR2 values change, and both of these conditions only occur on a falling clock edge.
 
 ## Reset Timing
 

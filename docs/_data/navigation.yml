@@ -42,6 +42,8 @@ docs:
     children:
       - title: "Instruction Cycle"
         url: /docs/instruction-cycle/
+      - title: "Clock Reset Issue"
+        url: /docs/clock-reset-issue/
       - title: "EEPROM Glitch"
         url: /docs/eeprom-glitch/
   - title: "Links"
