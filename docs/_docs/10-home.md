@@ -11,9 +11,9 @@ SAP-Plus is an extremely simple computer built from TTL logic.  There is no micr
 
 SAP-Plus uses some of the basic design of the Ben Eater build and adds the following extensions:
 
-* [Modular PCB backplane](../backplane/) and bus connectors, providing flexible arrangement of the computing boards to easily modify and extend the functionality
+* [Modular PCB backplane](backplane/) and bus connectors, providing flexible arrangement of the computing boards to easily modify and extend the functionality
 * All registers are expanded to 8-bits, including the memory addressing
-* [Arduino-based loader/debugger](../loader/) with full access to all data and microcode control lines to load programs and run interactive diagnostics
+* [Arduino-based loader/debugger](loader/) with full access to all data and microcode control lines to load programs and run interactive diagnostics
 * Each instruction can have a variable number of microcode steps, between 3 and 16
 * RAM can address two different 256-byte blocks, allowing for separate program, data, or stack areas
 
@@ -22,6 +22,6 @@ SAP-Plus uses some of the basic design of the Ben Eater build and adds the follo
 This build shares a lot of similarities with the [NQSAP-PCB TTL computer](https://tomnisbet.github.io/nqsap-pcb/), but is simplified in the following ways:
 
 * All through-hole parts, no surface mount soldering required
-* Simplified [ALU](../alu/) with only a few simple operations
+* Simplified [ALU](alu/) with only a few simple operations
 * Simplified flags implementation with Carry and Zero flags
 * No index registers or shift register

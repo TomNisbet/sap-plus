@@ -6,11 +6,11 @@ excerpt: "Clock and Reset interactions in SAP computers"
 
 The [WaveDrom timing diagram](https://wavedrom.com/) below shows the system reset sequence.  In this example, the program at address 0 is starts with an OUT instruction.  
 
+[![reset timing](../../assets/images/timing-reset.png "Timing of the reset condition")](../../assets/images/timing-reset.png)
+
 When the Reset button is pressed, the Step Counter (SC) resets back to zero, setting the microcode state to T0.  In this state, the Program Counter (PC) is read onto the bus, and writing is enabled to the Memory Address Register (MAR).  The PI signal is also asserted to increment the PC after it is read.
 
 Execution begins when the Reset button is released and the RST signal goes high again.  At the next rising edge of the CLK, the WM signal will clock the PC value from the data bus into the MAR.  The rising clock edge will also increment the PC due to the PI signal.  The T1 state will then load the Instruction Register (IR) with the opcode from RAM at the MAR location.
-
-[![reset timing](../../assets/images/timing-reset.png "Timing of the reset condition")](../../assets/images/timing-reset.png)
 
 The [logic analyzer](https://www.saleae.com) trace below shows the reset condition captured on a running SAP-Plus. The system comes out of reset at **Marker 0**. The rising clock edge at **Marker 1** loads the MAR and increments the PC.
 
