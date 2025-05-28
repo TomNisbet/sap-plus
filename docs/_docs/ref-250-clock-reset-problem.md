@@ -4,7 +4,7 @@ permalink: /docs/clock-reset-issue/
 excerpt: "Clock and Reset interactions in SAP computers"
 ---
 
-The [WaveDrom timing diagram](https://wavedrom.com/) below shows the system reset sequence.  In this example, the program at address 0 is starts with an OUT instruction.  
+The [WaveDrom timing diagram](https://wavedrom.com/) below shows the system reset sequence.  In this example, the program at address 0 starts with an OUT instruction.  
 
 [![reset timing](../../assets/images/timing-reset.png "Timing of the reset condition")](../../assets/images/timing-reset.png)
 
@@ -24,9 +24,9 @@ The previous timing and logic traces show the system coming out of reset while t
 
 ![reset timing](../../assets/images/logic-reset-high.png "Reset when CLK high")
 
-In this case, the next clock transition after reset occurs at **Marker 1**. This is a falling edge, causing the mirocode state to advance to T1.  There was no rising clock edge in the T0 state, meaning that the MAR will not be loaded and the PC will not be incremented.
+In this case, the next clock transition after reset occurs at **Marker 1**. This is a falling edge, causing the microcode state to advance to _T1_.  There was no rising clock edge in the T0 state, meaning that the MAR will not be loaded and the PC will not be incremented.
 
-In summary, if the system comes out of reset when the CLK signal is high, the first T0 state is effectively skipped - the MAR is not loaded and the PC is not incremented.
+In summary, if the system comes out of reset when the CLK signal is high, the first _T0_ state is effectively skipped - the MAR is not loaded and the PC is not incremented.
 
 This condition is not a problem for the Ben Eater SAP-1 computer, but it can cause major issues for extended systems like NQSAP and SAP-Plus.  
 
