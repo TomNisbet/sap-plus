@@ -10,9 +10,21 @@ Beyond the ability to simply load programs into memory, the Loader can read and 
 
 [![Arduino Loader](../../assets/images/loader-module-small.png "loader")](../../assets/images/loader-module.png)
 
-An 128x64 OLED display is included to show the status of the self test and other operations.  The display is driven by [SSD1306lite](https://github.com/TomNisbet/ssd1306lite), a simple OLED display driver with a very small RAM footprint. The OLED code was developed for this project because existing drivers either had too many configuration options or used too much memory, not leaving enough for the Loader itself.  The SSD1306lite code was written specifically for a single display type driven by an Arduino.  It is easily adapted to other projects needing a basic display. 
+An 128x64 OLED display is included to show the status of the self test and other operations.  The display is driven by [SSD1306lite](https://github.com/TomNisbet/ssd1306lite), a simple OLED display driver with a very small RAM footprint. The OLED code was developed for this project because existing drivers either had too many configuration options or used too much memory, not leaving enough for the Loader itself.  The SSD1306lite code was written specifically for a single display type driven by an Arduino.  It is easily adapted to other projects needing a basic display.
 
-The Loader writes a default program to the SAP-Plus memory at power up, allowing unattended operation.  If a USB connection is established, the Loader provides a ROM monitor-like command line interface to interact with the SAP-Plus hardware.  The following features are available via the USB interface:
+## Demo Mode
+
+At power up, the Loader waits a few seconds for serial activity on the USB connection and enters Demo Mode if no activity is seen.  In Demo Mode, the Loader cycles through a set of sample programs stored in the Arduino code.
+
+Each program is loaded into memory and then control is released back to the SAP-Plus for a set period of time to allow the program to run.  When the time expires, the Loader takes control again and starts the next sample program. The run time for each program is configurable in the Loader code, so that more complex programs, can run for a longer period.
+
+Demo Mode will repeat the set of programs indefinately, unless activity is seen on the USB.
+
+[![Loader Screens](../../assets/images/loader-screens.jpg "loader screens")](../../assets/images/loader-screens.jpg)
+
+## Monitor / Debugger
+
+If serial activity is present on the USB connection, Demo Mode is ended and the Loader provides a ROM monitor-like command line interface to interact with the SAP-Plus hardware.  The following features are available via the USB interface:
 
 * Memory
   * Load memory from a set of programs or patterns that are hard-coded into the Loader
@@ -35,13 +47,13 @@ The Loader writes a default program to the SAP-Plus memory at power up, allowing
 
 [![Arduino Loader](../../assets/images/loader-schematic-small.png "loader/debugger")](../../assets/images/loader-schematic.png)
 
-The Ben Eater RAM design uses multiplexers to select either the bus or a set of dip switches to load the RAM and MAR.  The SAP-PLus loader takes a different approach.  When active, the Loader disables the Microcode ROMs and generates its own control signals.  With this approach, it can read or write to any register, not just the RAM and MAR. It can also generate CLK and RST signals.  It can select a register, put a value on the data bus, and then pulse the CLK line to load the bus value into the register.
+The Ben Eater RAM design uses multiplexers to select either the bus or a set of dip switches to load the RAM and MAR.  The SAP-Plus loader takes a different approach.  When active, the Loader disables the Microcode ROMs and generates its own control signals.  With this approach, it can read or write to any register, not just the RAM and MAR. It can also generate CLK and RST signals.  It can select a register, put a value on the data bus, and then pulse the CLK line to load the bus value into the register.
 
-The Loader uses two 74HCT595 8-bit shift registers to drive the sixteen microcode ROM control outputs. The output enable of these registers is tied to the Loader's ACTIVE signal and the output enable of the microcode ROMs is the inverted ACTIVE signal, ensuring that only one source will be outputting a signal at any time. 
+The Loader uses two 74HCT595 8-bit shift registers to drive the sixteen microcode ROM control outputs. The output enable of these registers is tied to the Loader's ACTIVE signal and the output enable of the microcode ROMs is the inverted ACTIVE signal. This ensures that only one source will be outputting control signals at any time.
 
 ## Loader implementation
 
-The loader uses an Arduino Nano clone.  Note that the Loader Arduino is designed to be left in the circuit even when not connected to a controlling computer through USB.  Upon power up, the loader will activate itself and then load a default program into the SAP-Plus. So even in standalone mode, the SAP-Plus will power up into a state where it has code to execute.  There is no manual dip switch loader, so there is no way to load memory without the Arduino.
+The loader uses an Arduino Nano clone.  Note that the Loader Arduino is designed to be left in the circuit even when not connected to a controlling computer through USB.  Upon power up, the loader will activate itself and then load programs into the SAP-Plus. So even in standalone mode, the SAP-Plus will power up into a state where it has code to execute.  There is no manual dip switch loader, so there is no way to load memory without the Arduino.
 
 The Arduino is powered from the SAP-Plus Vcc through a diode so that if the NQSAP is powered off it does not try to draw power from the Arduino's USB port.  The USB port is connected to the host computer with a hub that has individual power switched, allowing the host computer's power to be disconnected from the SAP-Plus hardware.
 
