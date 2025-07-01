@@ -12,16 +12,17 @@ In addition to the larger and easier to operate switches, the SAP-Plus Memory Lo
 
 ## Memory Loader Design
 
-The most noticable feature of the loader is the eight rocker switches labeled D0..D7.  These switches are connected to the data bus through a transceiver, so they can be used to set data values for the RAM.  These switches are also indirectly used to set the MAR address value.  The loader contains a Loader Address Register (LAR) onboard.  Similar to the data switches, the outputs of the LAR are connected to the data bus using a 74LS245 bus transceiver.  The inputs of the LAR are connected to the eight data switches and are loaded when the SET button is pressed.
+The most noticable feature of the loader is the set of eight rocker switches labeled D0..D7.  These switches are connected to the data bus through a transceiver, so they can be used to set data values for the RAM.  These switches are also indirectly used to set the MAR address value.  The loader contains a Loader Address Register (LAR) onboard.  Similar to the data switches, the outputs of the LAR are connected to the data bus using a 74LS245 bus transceiver.  The inputs of the LAR are connected to the eight data switches and are loaded when the SET button is pressed.
 
 
 
 [![Memory Loader schematic](../../assets/images/memory-loader-schematic.png "memory loader schematic")](../../assets/images/memory-loader-schematic.png)
 
-The Ben Eater RAM design uses multiplexers to select either the bus or a set of dip switches to load the RAM and MAR.  The SAP-PLus loader takes a different approach.  When active, the Loader disables the Microcode ROMs and generates its own control signals.  With this approach, it can read or write to any register, not just the RAM and MAR. It can also generate CLK and RST signals.  It can select a register, put a value on the data bus, and then pulse the CLK line to load the bus value into the register.
+The Ben Eater RAM design uses multiplexers to select either the bus or a set of dip switches to load the RAM and MAR.  The SAP-Plus Memory Loader takes a different approach.  When active, the Loader disables the Microcode ROMs and generates its own control signals.  With this approach, it can read or write to any register, not just the RAM and MAR. It can also generate CLK and RST signals.  It can select a register, put a value on the data bus, and then pulse the CLK line to load the bus value into the register.
 
 ## Memory Loader implementation
 
+[![Memory Loader timing](../../assets/images/timing-memory-loader.png "memory loader timing")](../../assets/images/timing-memory-loader.png)
 
 ## SAP-Plus Interfacing
 
