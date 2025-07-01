@@ -8,7 +8,7 @@ The Clock Module provides the master timing signal (CLK) for the system. The clo
 
 * adjustable frequency astable clock
 * single pulse from a debounced clock pushbutton
-* clock signal (LD_C) from the [Loader Module](loader/)
+* clock signal (LD_C) from the [Loader Module](../loader/)
 * clock signal from the external connector
 
 [![System clock](../../assets/images/clock-module-v20.jpg "System clock")](../../assets/images/clock-module-v20.jpg)
