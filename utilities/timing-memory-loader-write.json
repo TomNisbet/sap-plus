@@ -1,0 +1,16 @@
+{signal: [
+  {name: 'mode', wave: '3..4.3...4..3.', data: ['WMAR', 'WRAM', 'WMAR', 'WRAM', 'WMAR']},
+  {name: 'CLK ', wave: 'l.HlHl..Hl.Hl.'},
+  {name: 'WMAR', wave: 'h..l.h...l..h.'},
+  {name: '+LAR', wave: 'H...lH.....lH.'},
+  {name: 'lar',  wave: '2....2......2.', data: ['1', '2', '3']},
+  {name: 'mar',  wave: '2.2.....2.....', data: ['0', '1', '2', '3']},
+  {name: 'ram',  wave: '2...2......2..', data: ['d1', 'd2', 'd3']},
+  ],
+  
+  head:{
+    text: 'Memory Loader - Write Mode',
+    tick: 0,
+    every: 1
+  }
+}

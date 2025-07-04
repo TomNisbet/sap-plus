@@ -1,0 +1,15 @@
+{ signal: [
+  {name: 'mode', wave: '3.............', data: ['WMAR']},
+  {name: 'CLK ', wave: 'l.HlHl..Hl.Hl.'},
+  {name: 'WMAR', wave: 'h.............'},
+  {name: '+LAR', wave: 'H.lHlH..lH.lH.'},
+  {name: 'lar',  wave: '2..2.2...2..2.', data: ['1', '2', '3', '4', '5']},
+  {name: 'mar',  wave: '2.2.2...2..2..', data: ['0', '1', '2', '3', '4', '5']},
+  ],
+  
+  head:{
+    text: 'Memory Loader - Read Mode',
+    tick: 0,
+    every: 1
+  }
+}
