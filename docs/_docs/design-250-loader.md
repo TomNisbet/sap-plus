@@ -4,7 +4,9 @@ permalink: /docs/loader/
 excerpt: "Arduino-based Loader/Debugger for the SAP-Plus computer"
 ---
 
-The program memory loader uses an Arduino Nano in place of manual-entry DIP switches on the SAP-1.  The Loader/Debugger has eight of the Arduino I/O lines connected directly to the SAP-Plus host bus for read and write access.  It can drive all of the microcode control lines plus the CLK and RST lines.
+The Loader/Debugger module uses an Arduino Nano in place of manual-entry DIP switches on the SAP-1 to load program memory. A manual [memory loader](../memory-loader/) using switches and basic logic chips can also be used in place of this Arduino loader.
+
+The Loader/Debugger has eight of the Arduino I/O lines connected directly to the SAP-Plus host bus for read and write access.  It can drive all of the microcode control lines plus the CLK and RST lines.
 
 Beyond the ability to simply load programs into memory, the Loader can read and write all of the SAP-Plus registers and drive any other control signals. This gives the Loader the capability to perform a comprehensive system verification.  This system test is helpful for verifying the operation of new modules.
 

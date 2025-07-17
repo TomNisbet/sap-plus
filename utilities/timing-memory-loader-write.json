@@ -1,5 +1,5 @@
 {signal: [
-  {name: 'mode', wave: '3..4.3...4..3.', data: ['WMAR', 'WRAM', 'WMAR', 'WRAM', 'WMAR']},
+  {name: 'state', wave: '3..4.3...4..3.', data: ['WMAR', 'WRAM', 'WMAR', 'WRAM', 'WMAR']},
   {name: 'CLK ', wave: 'l.HlHl..Hl.Hl.'},
   {name: 'WMAR', wave: 'h..l.h...l..h.'},
   {name: '+LAR', wave: 'H...lH.....lH.'},

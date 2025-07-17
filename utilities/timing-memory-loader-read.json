@@ -1,5 +1,5 @@
 { signal: [
-  {name: 'mode', wave: '3.............', data: ['WMAR']},
+  {name: 'state',wave: '3.............', data: ['WMAR']},
   {name: 'CLK ', wave: 'l.HlHl..Hl.Hl.'},
   {name: 'WMAR', wave: 'h.............'},
   {name: '+LAR', wave: 'H.lHlH..lH.lH.'},

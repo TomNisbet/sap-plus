@@ -14,6 +14,8 @@ docs:
         url: /docs/clock/
       - title: "Loader/Debugger"
         url: /docs/loader/
+      - title: "Memory Loader"
+        url: /docs/memory-loader/
       - title: "Microcode"
         url: /docs/microcode/
       - title: "IR and SC"
