@@ -4,6 +4,22 @@
 #include "font6x8.h"
 #include "font8x16.h"
 
+// The slave address of an SSD1306 is seven bits and should be either 0x3c or 0x3d.
+// The bit following the seven address bits is the read/write bit and it is always
+// set to zero to indicate that the microcontroller is writing to the display.
+//
+// The address and R/W bit are combined below so that the sendByte code can send the
+// adddress and R/W bit as a single byte.
+//
+// Some displays may already be marked Addr=78 rather than Addr=3C, but the
+// code below should always be 0x78 or 0x79 two cover the two possible
+// addresses used by the controller.
+//
+// These addresses may be specified in the SSD1306Display constructor.
+
+#define SSD1306_ADDR1    0x78    // Slave address of the display (0x3c << 1) | 0
+#define SSD1306_ADDR2    0x7a    // Slave address of the display (0x3d << 1) | 0
+
 
 class SSD1306Display {
     enum {
@@ -15,7 +31,7 @@ class SSD1306Display {
     };
 
     public:
-        SSD1306Display(void);
+        SSD1306Display(uint8_t addr = SSD1306_ADDR1);
         void initialize(void);
 
         void setPosition(uint8_t row, uint8_t column);
@@ -36,6 +52,7 @@ class SSD1306Display {
 
     private:
         bool fInvertData;
+        uint8_t i2cAddress;
 
         void ssd1306DataBegin(void);
         void ssd1306DataPutByte(uint8_t b);

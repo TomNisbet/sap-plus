@@ -4,6 +4,10 @@ created with KiCad 8.0
 
 ## Changelog
 
+### 1.2
+
+* Change OLED power to 3.3V and add pullup resistors on SDA and SCL
+
 ### 1.1
 
 * Fix U2 label to 7400 NAND, not 7408 AND

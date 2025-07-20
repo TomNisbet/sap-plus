@@ -13,6 +13,7 @@ non-contiguous code blocks.  Multiple blocks are supported in the output of the 
 """
 
 parser = argparse.ArgumentParser(description="World's Worst Assembler", epilog=epilog)
+parser.add_argument('-a', '--arrays', action='store_true', help="write memory as Python arrays")
 parser.add_argument('-l', '--list', action='store_true', help="write a human-readale listing")
 parser.add_argument('-m', '--monitor', action='store_true', help="write Insert commands for Monitor CLI")
 parser.add_argument('-v', '--version', action='version', version="%(prog)s v" +__version__+"")
@@ -151,17 +152,31 @@ def assemble(pass2):
         print('};', file=hFile)
 
 
-# printMem
+# printMonitor
 #
 # Print the code memory contents as a series of Insert commands for the Loader/Monitor.
 # Multiple, non-contiguous code blocks are supported.
-def printMem(mem):
+def printMonitor(mem):
     step = 8
     for key in mem:
         l = mem[key]
         if l:
             for x in range(0, len(l), step):
                 print("i{} {}".format(format(key+x, '02X'), ' '.join(l[x:x+step])))
+
+# printArrays
+#
+# Print the code memory contents as a series of Insert commands for the Loader/Monitor.
+# Multiple, non-contiguous code blocks are supported.
+def printArrays(mem):
+    step = 8
+    for key in mem:
+        print("mem{:02x} = (".format(key))
+        l = mem[key]
+        if l:
+            for x in range(0, len(l), step):
+                print("    {},".format(', '.join(['0x'+y for y in l[x:x+step]])))
+        print(")")
 
 
 labels = {}
@@ -174,4 +189,7 @@ except AssemblerError as e:
     exit(-1)
 #print(labels)
 if args.monitor:
-    printMem(mem)
+    printMonitor(mem)
+
+if args.arrays:
+    printArrays(mem)

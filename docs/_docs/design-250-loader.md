@@ -10,7 +10,7 @@ The Loader/Debugger has eight of the Arduino I/O lines connected directly to the
 
 Beyond the ability to simply load programs into memory, the Loader can read and write all of the SAP-Plus registers and drive any other control signals. This gives the Loader the capability to perform a comprehensive system verification.  This system test is helpful for verifying the operation of new modules.
 
-[![Arduino Loader](../../assets/images/loader-module-small.png "loader")](../../assets/images/loader-module.png)
+[![Arduino Loader](../../assets/images/loader-module-v12-small.jpg "loader")](../../assets/images/loader-module-v12.jpg)
 
 An 128x64 OLED display is included to show the status of the self test and other operations.  The display is driven by [SSD1306lite](https://github.com/TomNisbet/ssd1306lite), a simple OLED display driver with a very small RAM footprint. The OLED code was developed for this project because existing drivers either had too many configuration options or used too much memory, not leaving enough for the Loader itself.  The SSD1306lite code was written specifically for a single display type driven by an Arduino.  It is easily adapted to other projects needing a basic display.
 
@@ -47,7 +47,7 @@ If serial activity is present on the USB connection, Demo Mode is ended and the 
 
 ## Loader Design
 
-[![Arduino Loader](../../assets/images/loader-schematic-small.png "loader/debugger")](../../assets/images/loader-schematic.png)
+[![Arduino Loader](../../assets/images/loader-schematic-v12-small.png "loader/debugger")](../../assets/images/loader-schematic-v12.png)
 
 The Ben Eater RAM design uses multiplexers to select either the bus or a set of dip switches to load the RAM and MAR.  The SAP-Plus loader takes a different approach.  When active, the Loader disables the Microcode ROMs and generates its own control signals.  With this approach, it can read or write to any register, not just the RAM and MAR. It can also generate CLK and RST signals.  It can select a register, put a value on the data bus, and then pulse the CLK line to load the bus value into the register.
 
@@ -66,3 +66,4 @@ This BOM includes the reset circuitry as well as the Loader.
 * 74HCT00 quad 2-input NAND gate (1)
 * 74HCT595 8-bit shift register (2)
 * Arduino Nano
+* SSD1306 I2C 64x128 OLED Display

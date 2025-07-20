@@ -4,7 +4,7 @@
 #include "CmdStatus.h"
 #include "LoaderHw.h"
 
-static const char * MY_VERSION = "2.3";
+static const char * MY_VERSION = "3.0";
 
 // Global loader hardware interface
 LoaderHw hw;
@@ -86,12 +86,13 @@ static const uint8_t pgmCount3[] = {
     N_JMP, 3     // JMP back to LOOP
 };
 
-#include "pgmSquares.h"
+
 #include "pgmBounce.h"
+#include "pgmSquares.h"
+#include "pgmSieve.h"
 #include "pgmFibonacci.h"
 #include "pgmPrimes.h"
 #include "pgmStackTest.h"
-
 
 struct program_t {
     unsigned        seconds;
@@ -103,11 +104,12 @@ static const program_t programs[] = {
     20,     pgmBounce,      sizeof(pgmBounce),    "Bounce",
     20,     pgmSquares,     sizeof(pgmSquares),   "Squares",
     20,     pgmFastCount,   0,                    "Fast Count",
+    100,    pgmSieve,       sizeof(pgmSieve),     "Sieve",
     30,     pgmFibonacci,   sizeof(pgmFibonacci), "Fibonacci",
     10,     pgmShift,       sizeof(pgmShift),     "Shift",
     20,     pgmCount3,      sizeof(pgmCount3),    "Count by 3",
-    100,    pgmPrimes,      sizeof(pgmPrimes),    "Primes",
-    30,     pgmStackTest,   sizeof(pgmStackTest), "Stack Test"
+    30,     pgmStackTest,   sizeof(pgmStackTest), "Stack Test",
+    100,    pgmPrimes,      sizeof(pgmPrimes),    "Primes"
 };
 
 
@@ -162,7 +164,7 @@ void runProgram(unsigned pgmIx) {
             Serial.println(s);
             for (unsigned ix = 0; (ix < pgmLen); ix++) {
                 hw.writeData(pgmData + ix, 1, ix);
-                delay(80);
+                delay(50);
             }
             for (unsigned ix = 0; (ix < pgmLen); ix++) {
                 uint8_t b = hw.readByte(ix);

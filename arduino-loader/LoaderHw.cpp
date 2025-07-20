@@ -4,7 +4,8 @@
 extern CmdStatus cmdStatus;
 
 enum {
-    DELAY_LEDS = 80
+    DELAY_LEDS = 80,
+    DELAY_BEAT = 500
 };
 
 // Pin assignments are specific to Arduino Nano.  Some direct port manipulation is done
@@ -302,6 +303,7 @@ bool LoaderHw::testHardware() {
     controlBitsOffOn(CTL_ALL, CTL_N);
 
     testOutputRegister();
+    delay(DELAY_BEAT);
 
     for (ix = 0; (ix < numWoRegisters()); ix++) {
         if (!testRegister(woRegisters[ix], false)) {
@@ -317,10 +319,10 @@ bool LoaderHw::testHardware() {
     }
 
     bool ret = true;
-    if (ret) ret = testCounters(11);
-    if (ret) ret = testAlu();
-    if (ret) ret = testMemory(false);
-    if (ret) ret = testMemory(true);
+    if (ret) { ret = testCounters(11);    delay(DELAY_BEAT); }
+    if (ret) { ret = testAlu();           delay(DELAY_BEAT); }
+    if (ret) { ret = testMemory(false);   delay(DELAY_BEAT); }
+    if (ret) { ret = testMemory(true);    delay(DELAY_BEAT); }
 
     if (ret) {
         // Leave the registers as-is if a test failed, otherwise clear all registers.
@@ -392,6 +394,7 @@ bool LoaderHw::testRegister(unsigned reg, bool isRw) {
     }
 
     cmdStatus.pass();
+    delay(DELAY_BEAT);
     selectReadRegister(REG_NONE);
     selectWriteRegister(REG_NONE);
     controlBitsOffOn(CTL_BI, CTL_NONE);
@@ -413,6 +416,7 @@ bool LoaderHw::testOutputRegister() {
     }
 
     cmdStatus.pass();
+    writeRegister(REG_OUT, 0);
     selectReadRegister(REG_NONE);
     selectWriteRegister(REG_NONE);
     return true;
@@ -495,12 +499,16 @@ bool LoaderHw::testMemory(bool highMem) {
 bool LoaderHw::testAlu() {
     cmdStatus.test("ALU add C=0");
     if (!testAdder(false, 0))  return false;
+    delay(DELAY_BEAT);
     cmdStatus.test("ALU add C=1");
     if (!testAdder(false, 1))  return false;
+    delay(DELAY_BEAT);
     cmdStatus.test("ALU sub C=0");
     if (!testAdder(true, 0))  return false;
+    delay(DELAY_BEAT);
     cmdStatus.test("ALU sub C=1");
     if (!testAdder(true, 1))  return false;
+    delay(DELAY_BEAT);
 
     controlBitsOffOn(CTL_BI|CTL_CX, CTL_NONE);
     return true;

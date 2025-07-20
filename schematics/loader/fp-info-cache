@@ -1,4 +1,4 @@
-23700479387946295
+23707470342597281
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -96599,3 +96599,31 @@ MODULE_DM-OLED096-636-27
 0
 8
 8
+mySwitches
+RockerSwitch CIT RA-14xxxxC
+CIT RA14xxxxC mini rocker switch with solder terminals.  Will also fit Adam Tech SW-R2-2B-F-XX-0
+Rocker Switch
+0
+3
+3
+mySwitches
+RockerSwitch CIT RA-14xxxxP
+Wuerth electronics barrel jack connector (5.5mm outher diameter, inner diameter 2.05mm or 2.55mm depending on exact order number), See: http://katalog.we-online.de/em/datasheet/6941xx301002.pdf
+connector barrel jack
+0
+3
+3
+mySwitches
+SW_EG1218
+
+
+0
+3
+3
+mySwitches
+SW_Lever_1P2T_Nidek_CF-LD
+Switch, single pole double throw, right angle, http://www.nkkswitches.com/pdf/GW.pdf
+switch single-pole double-throw spdt ON-ON horizontal
+0
+5
+3
