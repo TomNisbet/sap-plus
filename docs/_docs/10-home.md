@@ -5,6 +5,7 @@ excerpt: "SAP-Plus: Simple As Possible (SAP) computer with a modular PCB design"
 ---
 
 ![SAP-Plus TTL computer](assets/videos/sap-plus.gif "SAP-Plus")
+
 Simple As Possible (SAP) Computer with modular PCB design
 
 SAP-Plus is an extremely simple computer built from TTL logic.  There is no microprocessor used.  Instead, all of the processing is performed using logic gates, counters, decoders, and other basic chips.  A popular example of this is the [Ben Eater 8-bit breadboard computer](https://eater.net/8bit).
@@ -24,4 +25,4 @@ This build shares a lot of similarities with the [NQSAP-PCB TTL computer](https:
 * All through-hole parts, no surface mount soldering required
 * Simplified [ALU](docs/alu/) with only a few simple operations
 * Simplified flags implementation with Carry and Zero flags
-* No index registers or shift register
+* No dedicated index registers or shift register (SP can be used as an index register)
