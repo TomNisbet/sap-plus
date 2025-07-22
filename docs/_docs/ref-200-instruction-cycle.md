@@ -6,9 +6,9 @@ excerpt: "Instruction Cycle and Timing for the SAP-Plus computer"
 
 The SAP-Plus instruction cycle is driven by the Instruction Register (IR) and Step Counter (SC).  These two registers provide the address bits to the microcode ROMs. By selecting an instruction and step, these registers determine which signals are asserted by the ROMs at each microcode step.
 
-Every instruction step has two parts.  On the falling clock edge, the Step Counter increments to a new instruction step.  The chenged SC value causes the Microcode ROM to assert the control signals for the instruction step.  Register read select signals cause a register value to be placed onto the bus at this time.  The register write signals are also asserted, but no action is taken yet.
+Every instruction step has two parts.  On the falling clock edge, the Step Counter increments to a new instruction step, causing the Microcode ROM to assert new control signals.  Register read select signals from the ROM cause a register value to be placed onto the bus at this time.  The register write signals are also asserted, but no action is taken yet.
 
-The second part of the instruction step is the rising CLK edge.  This is where the registers act on the control signals.  The value from the bus is clocked into the selected write register on the rising CLK edge. This is also where counter registers change, so the PC will increment at the rising CLK edge if the _N_ signal is asserted.
+The second part of the instruction step is the rising CLK edge.  This is where the registers act on the control signals.  The value on the bus is clocked into the selected write register on the rising CLK edge. This is also where counter registers change, so the PC will increment at the rising CLK edge if the _N_ signal is asserted.
 
 For a concrete example, the [WaveDrom timing diagram](https://wavedrom.com/) below shows the execution of a Load A Immediate (LAI) instruction at RAM address 0, followed by an OUT A instruction at RAM address 2.
 

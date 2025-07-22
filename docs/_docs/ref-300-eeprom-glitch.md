@@ -62,7 +62,7 @@ The Zero and Carry flag bits from the Flags register are not directly connected 
 
 ### Double Buffered Instruction Register
 
-The Instruction Register uses a double-buffered design to move the address line changes to the falling edge of the clock pulse.  The IR is loaded as usual on the positive edge of the clock in _T1_.  The outputs of IR are connected to the inputs of a second instruction register which is loaded on every falling clock pulse.  The outputs of this IR2 register are used to drive the address lines of the EEPROM.  
+The Instruction Register uses a double-buffered design to move the address line changes to the falling edge of the clock pulse.  The IR is loaded as usual on the rising edge of the clock in _T1_.  The outputs of IR are connected to the inputs of a second instruction register which is loaded on every falling clock pulse.  The outputs of this IR2 register are used to drive the address lines of the EEPROM.  
 
 The result is that the address lines driven by the IR now change on the falling edge of instruction cycle _T1_, at the same time as the address lines driven by the Step Counter.
 
