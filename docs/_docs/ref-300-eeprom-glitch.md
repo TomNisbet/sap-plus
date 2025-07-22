@@ -4,7 +4,7 @@ permalink: /docs/eeprom-glitch/
 excerpt: "Issues when using EEPROMs to produce control signals"
 ---
 
-EEPROMs are a straightforward and convenient way to produce the system control signals. Microcode is stored in EEPROMs with the Step Counter and Instruction Register values driving the EEPROM address lines and the EEPROM data outputs providing the system control signals.  However, there is an important property of EEPROM operation that causes problems.
+EEPROMs are a straightforward and convenient way to produce the system control signals. Microcode is stored in EEPROMs, with the Step Counter and Instruction Register values driving the EEPROM address lines and the EEPROM data outputs providing the system control signals.  However, there is an important property of EEPROM operation that causes problems.
 
 ## The EEPROM "glitch"
 
@@ -54,9 +54,22 @@ Another solution is to use pull-up or pull-down resistors on the control lines. 
 
 ## SAP-Plus design to avoid the glitch
 
-SAP-Plus solves the EEPROM glitch in the digital domain by making changes
-to the design of the flags and the Instruction Register.  
+SAP-Plus solves the EEPROM glitch in the digital domain by making changes to the design of the flags and the Instruction Register.  
+
+### Buffered Flags
 
 The Zero and Carry flag bits from the Flags register are not directly connected to the Microcode EEPROM address lines. Instead, the output of the Flags Register is connected to the upper two inputs of the Instruction Register.  The lower six bits of the IR are connected to the bus.  When the Write IR signal is asserted, the IR is loaded with a six bit opcode and two flag bits.  Because the flags are not directly wired to the EEPROM address lines, changing flag values does not cause any glitches.
 
-The Instruction Register uses a double-buffered design to move the address line changes to the falling edge of the clock pulse.  The IR is loaded as usual on the positive edge of the clock in T1.  The outputs of this register are connected to the inputs of a second instruction register which is loaded on every falling clock pulse.  The outputs of this second register are used to drive the address lines of the EEPROM.  The result is that the address lines driven by the IR now change on the falling edge of instruction cycle _T1_, at the same time as the address lines driven by the Step Counter.  With these two design changes, the outputs of the microcode EEPROMs are always stable when the clock is high, so they can safely be used with rising clock edges or ANDed with the clock signal.
+### Double Buffered Instruction Register
+
+The Instruction Register uses a double-buffered design to move the address line changes to the falling edge of the clock pulse.  The IR is loaded as usual on the positive edge of the clock in _T1_.  The outputs of IR are connected to the inputs of a second instruction register which is loaded on every falling clock pulse.  The outputs of this IR2 register are used to drive the address lines of the EEPROM.  
+
+The result is that the address lines driven by the IR now change on the falling edge of instruction cycle _T1_, at the same time as the address lines driven by the Step Counter.
+
+With the buffered flags and buffered IR, the outputs of the microcode EEPROMs are always stable when the clock is high, so they can safely be used with rising clock edges or ANDed with the clock signal.
+
+### Multiplexed Chip Selects
+
+Rather than driving the register read and write select lines directly, outputs from the Microcode ROM are fed into the inputs of 74LS138 3-to-8 multiplexers.  This reduces the number of ROM outputs and control bus signals needed, because 4 write signals from the ROM can select up to 15 write registers and 3 read signals from the ROM can select up to 7 read registers.  
+
+The use of the multiplexers ensures that only one read select will be active at any time, so there is no momentaty bus contention while the ROM outputs are settling.

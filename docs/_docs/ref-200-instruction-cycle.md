@@ -6,7 +6,9 @@ excerpt: "Instruction Cycle and Timing for the SAP-Plus computer"
 
 The SAP-Plus instruction cycle is driven by the Instruction Register (IR) and Step Counter (SC).  These two registers provide the address bits to the microcode ROMs. By selecting an instruction and step, these registers determine which signals are asserted by the ROMs at each microcode step.
 
-Each instruction step causes actions on both the falling and rising edge of each CLK pulse. The Step Counter changes on every falling CLK edge, so this is when each microinstruction step asserts new control signals.  Register read selects cause a register value to be read onto the bus at this time.  The registers load on a rising CLK edge, so the value from the bus is clocked into the selected write register on the rising edge.
+Every instruction step has two parts.  On the falling clock edge, the Step Counter increments to a new instruction step.  The chenged SC value causes the Microcode ROM to assert the control signals for the instruction step.  Register read select signals cause a register value to be placed onto the bus at this time.  The register write signals are also asserted, but no action is taken yet.
+
+The second part of the instruction step is the rising CLK edge.  This is where the registers act on the control signals.  The value from the bus is clocked into the selected write register on the rising CLK edge. This is also where counter registers change, so the PC will increment at the rising CLK edge if the _N_ signal is asserted.
 
 For a concrete example, the [WaveDrom timing diagram](https://wavedrom.com/) below shows the execution of a Load A Immediate (LAI) instruction at RAM address 0, followed by an OUT A instruction at RAM address 2.
 
@@ -45,7 +47,7 @@ The Instruction Register does not get loaded until midway through the _T1_ micro
 
 ## SAP-Plus 2nd Instruction Register (IR2)
 
-SAP-Plus uses a double-buffered Instruction Register (IR) to mitigate the [EEPROM Glitch](../eeprom-glitch/#sap-plus-design-to-avoid-the-glitch) that happens when the address lines of the microcode EEPROMs are changed.  As shown in the timing diagram of the previous section, the IR2 register is loaded from the IR on every falling clock edge. The Microcode ROM address lines are driven by IR2 instead or IR. This means that the address lines only change when the Step Counter or IR2 values change, and both of these conditions only occur on a falling clock edge.
+SAP-Plus uses a double-buffered Instruction Register (IR) to mitigate the [EEPROM Glitch](../eeprom-glitch/#sap-plus-design-to-avoid-the-glitch) that happens when the address lines of the microcode EEPROMs are changed.  As shown in the timing diagram of the previous section, the IR2 register is loaded from the IR on every falling clock edge. The Microcode ROM address lines are driven by IR2 instead of IR. This means that the address lines only change when the Step Counter or IR2 values change, and both of these conditions only occur on a falling clock edge.
 
 ## Reset Timing
 
