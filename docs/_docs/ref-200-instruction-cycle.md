@@ -6,9 +6,9 @@ excerpt: "Instruction Cycle and Timing for the SAP-Plus computer"
 
 The SAP-Plus instruction cycle is driven by the Instruction Register (IR) and Step Counter (SC).  These two registers provide the address bits to the microcode ROMs. By selecting an instruction and step, these registers determine which signals are asserted by the ROMs at each microcode step.
 
-Every instruction step has two parts.  On the falling clock edge, the Step Counter increments to a new instruction step, causing the Microcode ROM to assert control signals for the next microinstruction.  Register read select signals from the ROM cause a register value to be placed onto the bus at this time.  Register write signals are also asserted, but no action is taken yet.
+Every instruction step has two phases.  On the falling clock edge, the Step Counter increments to a new instruction step, causing the Microcode ROM to assert control signals for the next microinstruction.  Register read select signals from the ROM cause a register value to be placed onto the bus at this time.  Register write signals are also asserted, but no action is taken yet.  This the setup phase of the instruction step.
 
-The second part of the instruction step is the rising CLK edge.  This is where the registers act on the control signals.  The value on the bus is clocked into the selected write register on the rising CLK edge. This is also where counter registers change, so the PC will increment at the rising CLK edge if the _N_ signal is asserted.
+The second part of the instruction step is the rising CLK edge.  This is the execute phase.  The value on the bus is clocked into the selected write register on the rising CLK edge. This is also where counter registers change, so the PC will increment at the rising CLK edge if the _N_ signal is asserted.
 
 For a concrete example, the [WaveDrom timing diagram](https://wavedrom.com/) below shows the execution of a Load A Immediate (LAI) instruction at RAM address 0, followed by an OUT A instruction at RAM address 2.
 
@@ -18,9 +18,9 @@ For a concrete example, the [WaveDrom timing diagram](https://wavedrom.com/) bel
 
 Load A Immediate is a two-byte instruction.  The A register is loaded with the value of the second instruction byte.
 
-**Marker 1**: the falling edge of CLK sets the Step Counter (SC) to _T0_.  This step asserts the Read PC and Write MAR signals to get the address of the next instruction.  The PC Increment (PI) signal is also asserted.  At this point, the Program Counter (PC) contents are read onto the bus.
+**Marker 1**: the falling edge of CLK sets the Step Counter (SC) to _T0_, setting up the loading of the MAR from the PC.  The _T0_ step asserts the Read PC and Write MAR signals to get the address of the next instruction.  The PC Increment (PI) signal is also asserted.  At this point, the Program Counter (PC) contents are read onto the bus.
 
-**Marker 2**: the rising edge of the clock causes the PC value on the bus to be written into the Memory Address Register (MAR).  The PC is also incremented.
+**Marker 2**: the rising edge of the clock executes the _T0_ step, causing the PC value on the bus to be written into the Memory Address Register (MAR).  The PC is also incremented.
 
 **Marker 3**: the falling CLK edge increments the Step Counter to enter step _T1_.  This asserts the Read RAM and Write IR signals.  At this point, the RAM contents at the MAR address are read onto the bus.
 
