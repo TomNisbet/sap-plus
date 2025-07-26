@@ -26,7 +26,7 @@ The RAM is implemented using a 32Kx8 bit static RAM.  Only a small portion of th
 
 The RAM is read and written to the data bus using the Read RAM (_RR_) and Write RAM (_WR_) signals from the Microcode.
 
-The RAM has LEDs connected that display the data byte at the current MAR address.  The LEDs were added to allow the use of a manual, switch-based program loader.  The manual loader design is not yet completed.
+The RAM has LEDs connected that display the data byte at the current MAR address.  The LEDs were added to allow the use of the [switch-based program memory loader](../memory-loader/).
 
 The RAM LEDs make the design a bit more complex.  Without them, the RAM chip could connect directly to the data bus and the RAM outputs would tri-state when the RAM was not being accessed.  The [NQSAP-PCB RAM design](https://tomnisbet.github.io/nqsap-pcb/docs/ram-mar/) is an example of this simpler approach.
 
@@ -44,4 +44,4 @@ The U3A NAND gate inverts the active-LOW _WR_ signal to produce a HIGH when a RA
 
 The U3D NAND gate combines the _RR_ and _WR_ signals and that output is inverted by U3C so that the bus transceiver is active whenever either the _RR_ or _RW_ signal is asserted.
 
-The bus transceiver _A->B_ direction is controlled directly by the _WR_ signal, so that it is feeding the data bus to RAM on a write and RAM to data bus in all other cases.  Note that the direction doesn't matter if neither _RR_ or _WR_ is asserted because the tranceiver output will be disabled by _CE_.
+The bus transceiver _A->B_ direction is controlled directly by the _WR_ signal, so that it is feeding the data bus to RAM on a write and RAM to data bus in all other cases.  Note that the direction doesn't matter if neither _RR_ or _WR_ is asserted because the transceiver output will be disabled by _CE_.
