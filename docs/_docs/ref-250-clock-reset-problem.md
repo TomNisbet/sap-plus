@@ -30,13 +30,13 @@ In summary, if the system comes out of reset when the CLK signal is high, the fi
 
 This condition is not a problem for the Ben Eater SAP-1 computer, but it can cause major issues for extended systems like NQSAP and SAP-Plus.  
 
-### SAP-1 ###
+### SAP-1
 
-When the system comes out of reset, the first T0 state always loads zero into the MAR because it is loading the MAR from the PC and the PC is cleared during the reset condition.  Missing the MAR load is not a problem with SAP-1 because the MAR is also cleared at reset and therefore already contains zero.  The following T1 state will then load the IR with the instruction opcode at RAM address zero.
+The _T0_ step moves the contents of the PC into the MAR.  When the system comes out of reset, the PC has been cleared to zero, so the first _T0_ step after a reset always loads zero into the MAR.  In the SAP-1 design, the MAR is also cleared at reset, so the first _T0_ step doesn't actually do anything and it is not a problem if the step is skipped.
 
-The only complication for SAP-1 is that the PC did not increment in step T0, so the next instruction cycle will load and execute the instruction at address zero a second time. The first instruction in most programs is usually setting initial values for the system, so executing it twice won't cause any noticable problem.
+Due to clever design or good fortune, the SAP-1 design increments the PC in step _T1_ instead of in _T0_, so this is always done correctly.
 
-### SAP-Plus ###
+### SAP-Plus
 
 The SAP-Plus has two differences from SAP-1 that can cause issues at reset. The first is that the MAR is implemented using a 74LS377 8-bit register rather than a 74LS173 register.  The 74LS377 does not have a CLR pin, so the SAP-Plus MAR is not cleared to zero at reset.  If the rising CLK is not present in T0 to load the MAR, then the first T1 step will load the IR with a value from a random RAM address instead of from address zero.  This will cause a random instruction to be executed after reset.
 
@@ -61,6 +61,9 @@ If the actual first instruction is a single-byte instruction, it is skipped and 
 If the actual first instruction is a two-byte instruction, then the missed _T0_ step will cause the PC to be pointing to the first instruction's argument at the start of the next instruction cycle.  This data value will be fetched at the next _T0_ and loaded into the IR on the next _T1_ as it it were a valid instruction.
 
 Once the system gets out of sync and starts executing data, the entire program is compromised.  It may get back on track after a few instructions, or it may overwrite data or execute a JMP to a completely different clock of code or data.
+
+The SAP-Plus microcode could be changed to increment the PC in step _T1_ instead of _T0_, like the SAP-1.  This would not fix the problem because an erronously executed first instruction can still be a different length than the correct instruction and increment the PC the wrong number of times.
+{: .notice--info}
 
 ### Code Example After Bad Reset
 
